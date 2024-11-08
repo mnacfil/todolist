@@ -18,6 +18,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import clsx from "clsx";
 
 type Props = {
   userId: string;
@@ -111,7 +113,7 @@ const TaskOverview = ({ userId, task, onOpenChange }: Props) => {
                     <Separator className="my-3" />
                   </>
                 )}
-                {task?.comments?.length > 0 ? (
+                {task?.comments?.length > 0 && (
                   <>
                     <HideAndShow
                       label="Comments"
@@ -167,32 +169,17 @@ const TaskOverview = ({ userId, task, onOpenChange }: Props) => {
                       </div>
                     </HideAndShow>
                   </>
-                ) : isComment ? (
-                  <CommentForm
-                    userId={userId}
-                    taskId={task.id}
-                    onCancel={() => setIsComment(false)}
-                  />
-                ) : (
-                  <div className="flex items-center space-x-2 my-5">
-                    <Avatar>
-                      <AvatarImage src="https://github.com/shadcn.png" />
-                      <AvatarFallback>MN</AvatarFallback>
-                    </Avatar>
-                    <div
-                      className="rounded-full flex-1 border border-gray-100 px-4 py-1 flex justify-between items-center cursor-pointer hover:bg-orange-50/50"
-                      onClick={() => setIsComment(true)}
-                    >
-                      <span className="text-sm">Comment</span>
-                      <Paperclip className="w-4 h-4 opacity-50" />
-                    </div>
-                  </div>
                 )}
               </div>
             </div>
           </div>
         </div>
-        <div className="ml-5">
+        <div
+          className={clsx(
+            "task?.subTasks?.length",
+            task?.comments?.length ? "ml-[42px]" : "ml-5"
+          )}
+        >
           {isComment ? (
             <CommentForm
               userId={userId}
