@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import clsx from "clsx";
+import { useSubTask } from "@/hooks/task";
 
 type Props = {
   userId: string;
@@ -31,6 +32,7 @@ const TaskOverview = ({ userId, task, onOpenChange }: Props) => {
   // const [isChecked, isChecked] = useState(false);
   const [isComment, setIsComment] = useState(false);
   const [isAddingSubTask, setIsAddingSubTask] = useState(false);
+  const { subTaskMutation } = useSubTask(userId);
 
   const onAddSubTask = () => {
     setIsAddingSubTask(true);
@@ -72,7 +74,13 @@ const TaskOverview = ({ userId, task, onOpenChange }: Props) => {
                               <Checkbox
                                 id="subtaskCheckbox"
                                 className="rounded-full w-4 h-4 opacity-50 mt-[2px]"
-                                onClick={(e) => e.stopPropagation()}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  subTaskMutation.delete.mutate({
+                                    id: subTask.id,
+                                    taskId: task.id,
+                                  });
+                                }}
                               />
                             </Label>
                             <div className="flex flex-col gap-1">

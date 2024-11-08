@@ -11,6 +11,8 @@ type Props = {
   userId: string;
 };
 
+// Todo loading UI
+
 const Today = ({ userId }: Props) => {
   const { data, isPending } = useQuery({
     queryKey: appKeys.getUserTask(userId),

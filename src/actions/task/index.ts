@@ -81,6 +81,69 @@ export const createSubTask = async ({
   }
 };
 
+export const updateSubTask = async ({
+  data,
+  id,
+  taskId,
+}: {
+  id: string;
+  taskId: string;
+  data: Prisma.SubTaskCreateInput;
+}) => {
+  if (!id || !taskId) {
+    return {
+      status: 400,
+      data: null,
+      message: "Invalid id or taskId",
+    };
+  }
+  try {
+    const subtask = await prisma.subTask.update({
+      where: { id, taskId },
+      data: { ...data },
+    });
+    return {
+      status: 200,
+      data: subtask,
+      message: "Sub task has been updated.",
+    };
+  } catch (error) {
+    return {
+      status: 400,
+      data: null,
+      message: "Sub task cannot be updated at this time.",
+    };
+  }
+};
+
+export const deleteSubTask = async (id: string, taskId: string) => {
+  try {
+    const subtask = await prisma.subTask.delete({
+      where: { id, taskId },
+      select: {
+        title: true,
+      },
+    });
+    return {
+      status: 200,
+      data: subtask,
+      message: "1 Sub task completed.",
+    };
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      return {
+        status: error.code,
+        data: null,
+        message: error.message,
+      };
+    }
+    return {
+      status: 404,
+      message: "Sub task cannot delete at this time.",
+    };
+  }
+};
+
 export const createTask = async ({
   data,
   userId,
@@ -136,6 +199,9 @@ export const deleteTask = async (id: string) => {
       where: {
         id,
       },
+      select: {
+        title: true,
+      },
     });
 
     return {
@@ -153,7 +219,7 @@ export const deleteTask = async (id: string) => {
     }
     return {
       status: 404,
-      message: "Task has been removed succesfully.",
+      message: "Task cannot be removed at this time.",
     };
   }
 };

@@ -1,7 +1,9 @@
 import {
   createSubTask,
   createTask,
+  deleteSubTask,
   deleteTask,
+  updateSubTask,
   updateTask,
 } from "@/actions/task";
 import { appKeys } from "@/lib/react-query";
@@ -160,68 +162,190 @@ export const useTask = (userId: string) => {
 
 export const useSubTask = (userId: string) => {
   const queryClient = useQueryClient();
-  const { isPending: isCreatingSubtask, mutate: createSubTaskMutate } =
-    useMutation({
-      mutationFn: async ({
-        userId,
-        taskId,
-        data,
-      }: {
-        userId: string;
-        taskId: string;
-        data: Prisma.SubTaskCreateInput;
-      }) => {
-        return await createSubTask({ userId, taskId, data });
-      },
-      onMutate: (payload) => {
-        queryClient.cancelQueries({ queryKey: appKeys.getUserTask(userId) });
+  const createSubTaskMutationResult = useMutation({
+    mutationFn: async ({
+      userId,
+      taskId,
+      data,
+    }: {
+      userId: string;
+      taskId: string;
+      data: Prisma.SubTaskCreateInput;
+    }) => {
+      return await createSubTask({ userId, taskId, data });
+    },
+    onMutate: (payload) => {
+      queryClient.cancelQueries({ queryKey: appKeys.getUserTask(userId) });
 
-        const previousTasks = queryClient.getQueryData<
-          Prisma.TaskCreateInput[]
-        >(appKeys.getUserTask(userId));
+      const previousTasks = queryClient.getQueryData<Prisma.TaskCreateInput[]>(
+        appKeys.getUserTask(userId)
+      );
 
-        queryClient.setQueryData(appKeys.getUserTask(userId), (old: any) => ({
-          ...old,
-          ["data"]: old.data.map((task: Prisma.TaskCreateInput) =>
-            task.id === payload.taskId
-              ? {
-                  ...task,
-                  subTasks: [
-                    ...(task?.subTasks as Prisma.SubTaskCreateNestedManyWithoutTaskInput[]),
-                    payload.data,
-                  ],
-                }
-              : task
-          ),
-        }));
+      queryClient.setQueryData(appKeys.getUserTask(userId), (old: any) => ({
+        ...old,
+        ["data"]: old.data.map((task: Prisma.TaskCreateInput) =>
+          task.id === payload.taskId
+            ? {
+                ...task,
+                subTasks: [
+                  ...(task?.subTasks as Prisma.SubTaskCreateNestedManyWithoutTaskInput[]),
+                  payload.data,
+                ],
+              }
+            : task
+        ),
+      }));
 
-        return { previousTasks };
-      },
-      onError: (error, payload, context) => {
-        queryClient.setQueryData(
-          appKeys.getUserTask(userId),
-          context?.previousTasks
-        );
-        console.log(error);
-      },
-      onSettled: (res) => {
-        if (res?.status === 201) {
-          toast("Success", {
-            description: res?.message || "Sub task add succesfully.",
-          });
-        } else {
-          toast("Error", {
-            description: res?.message || "Something went wrong.",
-          });
-        }
-        queryClient.invalidateQueries({
-          queryKey: appKeys.getUserTask(userId),
+      return { previousTasks };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(
+        appKeys.getUserTask(userId),
+        context?.previousTasks
+      );
+      console.log(error);
+    },
+    onSettled: (res) => {
+      if (res?.status === 201) {
+        toast("Success", {
+          description: res?.message || "Sub task add succesfully.",
         });
-      },
-    });
+      } else {
+        toast("Error", {
+          description: res?.message || "Something went wrong.",
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getUserTask(userId),
+      });
+    },
+  });
+
+  const deleteSubtaskMutationResult = useMutation({
+    mutationFn: async ({ id, taskId }: { id: string; taskId: string }) => {
+      return await deleteSubTask(id, taskId);
+    },
+    onMutate: (payload) => {
+      queryClient.cancelQueries({ queryKey: appKeys.getUserTask(userId) });
+
+      const previousTasks = queryClient.getQueryData<Prisma.TaskCreateInput[]>(
+        appKeys.getUserTask(userId)
+      );
+
+      queryClient.setQueryData(appKeys.getUserTask(userId), (old: any) => ({
+        ...old,
+        ["data"]: old.data.map((task: Prisma.TaskCreateInput) =>
+          task.id === payload.taskId
+            ? {
+                ...task,
+                subTasks: (
+                  task?.subTasks as Prisma.SubTaskCreateInput[]
+                ).filter((subtask) => subtask.id !== payload.id),
+              }
+            : task
+        ),
+      }));
+
+      return { previousTasks };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(
+        appKeys.getUserTask(userId),
+        context?.previousTasks
+      );
+      console.log(error);
+    },
+    onSettled: (res) => {
+      if (res?.status === 200) {
+        toast("Success", {
+          description: res?.message || "1 Sub task completed",
+        });
+      } else {
+        toast("Error", {
+          description: res?.message || "Something went wrong.",
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getUserTask(userId),
+      });
+    },
+  });
+
+  const updateSubtaskMutationResult = useMutation({
+    mutationFn: async ({
+      id,
+      taskId,
+      data,
+    }: {
+      id: string;
+      taskId: string;
+      data: Prisma.SubTaskCreateInput;
+    }) => {
+      return await updateSubTask({ id, taskId, data });
+    },
+    onMutate: (payload) => {
+      queryClient.cancelQueries({ queryKey: appKeys.getUserTask(userId) });
+
+      const previousTasks = queryClient.getQueryData<Prisma.TaskCreateInput[]>(
+        appKeys.getUserTask(userId)
+      );
+
+      queryClient.setQueryData(appKeys.getUserTask(userId), (old: any) => ({
+        ...old,
+        ["data"]: old.data.map((task: Prisma.TaskCreateInput) =>
+          task.id === payload.taskId
+            ? {
+                ...task,
+                subTasks: (task?.subTasks as Prisma.SubTaskCreateInput[]).map(
+                  (subtask) =>
+                    subtask.id === payload.id ? payload.data : subtask
+                ),
+              }
+            : task
+        ),
+      }));
+
+      return { previousTasks };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(
+        appKeys.getUserTask(userId),
+        context?.previousTasks
+      );
+      console.log(error);
+    },
+    onSettled: (res) => {
+      if (res?.status === 200) {
+        toast("Success", {
+          description: res?.message || "Sub task successfully updated.",
+        });
+      } else {
+        toast("Error", {
+          description: res?.message || "Something went wrong.",
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getUserTask(userId),
+      });
+    },
+  });
+
+  const subTaskMutation = {
+    create: {
+      mutate: createSubTaskMutationResult.mutate,
+      isPending: createSubTaskMutationResult.isPending,
+    },
+    delete: {
+      mutate: deleteSubtaskMutationResult.mutate,
+      isPending: deleteSubtaskMutationResult.isPending,
+    },
+    update: {
+      mutate: updateSubtaskMutationResult.mutate,
+      isPending: updateSubtaskMutationResult.isPending,
+    },
+  };
 
   return {
-    isCreatingSubtask,
-    createSubTaskMutate,
+    subTaskMutation,
   };
 };

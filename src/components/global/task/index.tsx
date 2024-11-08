@@ -15,12 +15,19 @@ import AddTaskForm from "@/components/form/add-task";
 import MoreOptions from "./more-options";
 import { useTask } from "@/hooks/task";
 import { Separator } from "@radix-ui/react-separator";
-import TaskOverview from "./task-overview";
+import dynamic from "next/dynamic";
 
 type Props = {
   task: any;
   userId: string;
 };
+
+// TODO
+// when the request is fail, it still show up in the UI
+// but when you refresh it not.
+// when the request is fail. it must be not show in the UI
+
+const TaskOverview = dynamic(() => import("./task-overview"));
 
 const Task = ({ task, userId }: Props) => {
   const { deleteMutate } = useTask(userId);
