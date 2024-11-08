@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  clerkId   String    @unique
+  email     String    @unique
+  firstname String
+  lastname  String
+  image     String?
+  tasks     Task[]
+  SubTask   SubTask[]
+  Comment   Comment[]
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  title       String
+  description String?
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+  dueDate     DateTime?
+  priority    String?
+  reminder    String?
+  labels      String?
+  subTasks    SubTask[]
+  comments    Comment[]
+}
+
+// Project model
+// labels model
+// SubTask
+
+model SubTask {
+  id          String    @id @default(uuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  title       String
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  task        Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId      String
+  authorId    String
+  description String?
+  dueDate     DateTime?
+  priority    String?
+  reminder    String?
+  labels      String?
+}
+
+// Comment
+
+model Comment {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  content   String
+  task      Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  taskId    String
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  replied   Boolean?  @default(false)
+  reply     Comment[] @relation(name: "CommentToComments")
+  Comment   Comment?  @relation(name: "CommentToComments", fields: [commentId], references: [id])
+  commentId String?
+}
