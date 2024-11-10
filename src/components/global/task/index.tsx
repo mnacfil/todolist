@@ -16,6 +16,8 @@ import MoreOptions from "./more-options";
 import { useTask } from "@/hooks/task";
 import { Separator } from "@radix-ui/react-separator";
 import dynamic from "next/dynamic";
+import MoreActions from "../more-actions";
+import { HeaderActions, TaskActions } from "./task-overview/actions";
 
 type Props = {
   task: any;
@@ -48,7 +50,11 @@ const Task = ({ task, userId }: Props) => {
         />
       ) : (
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
-          <div className="p-2 flex flex-col gap-1">
+          <div
+            className="p-2 flex flex-col gap-1"
+            onMouseEnter={() => console.log("enter")}
+            onMouseLeave={() => console.log("leave")}
+          >
             <div className="flex justify-between items-center">
               <div className="flex gap-2">
                 <Label htmlFor="taskCheckbox">
@@ -71,7 +77,7 @@ const Task = ({ task, userId }: Props) => {
                     onClick={() => setShowDialog(true)}
                   >
                     <h4 className="text-sm font-light">{task.title}</h4>
-                    <p className="p-0 text-sm font-light text-gray-500">
+                    <p className="p-0 text-xs font-light text-gray-500">
                       {task.description}
                     </p>
                   </div>
@@ -85,11 +91,9 @@ const Task = ({ task, userId }: Props) => {
                 />
                 <Calendar className="text-gray-400" size={16} />
                 <MessageSquare className="text-gray-400" size={16} />
-                <MoreOptions
-                  task={task}
-                  userId={userId}
-                  onClickEdit={onEditTask}
-                />
+                <MoreActions>
+                  <TaskActions userId={userId} />
+                </MoreActions>
               </div>
             </div>
             <div className="flex-1 flex items-center gap-1">
@@ -98,10 +102,17 @@ const Task = ({ task, userId }: Props) => {
             </div>
           </div>
           <DialogContent className="w-full flex flex-col sm:max-w-4xl p-0 min-h-[80%] max-h-[80%] gap-0">
-            <DialogHeader className="flex px-4 py-2 flex-row items-center justify-between ">
-              <div className="flex items-center space-x-2">
-                <Inbox className="w-4 h-4 opacity-50" />
-                <DialogTitle>Inbox</DialogTitle>
+            <DialogHeader className="flex px-4 py-2  w-full">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Inbox className="w-4 h-4 opacity-50" />
+                  <DialogTitle className="text-sm">Inbox</DialogTitle>
+                </div>
+                <div className="mr-10">
+                  <MoreActions>
+                    <HeaderActions />
+                  </MoreActions>
+                </div>
               </div>
               {/* <div className="text-sm font-light">more actions</div> */}
             </DialogHeader>

@@ -12,15 +12,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import CommentForm from "@/components/form/comment";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
 import clsx from "clsx";
 import { useSubTask } from "@/hooks/task";
+import MoreActions from "../../more-actions";
+import { CommentActions } from "./actions";
 
 type Props = {
   userId: string;
@@ -148,26 +143,9 @@ const TaskOverview = ({ userId, task, onOpenChange }: Props) => {
                                   <div className="p-1 rounded-sm hover:bg-gray-100 transition-all cursor-pointer">
                                     <Smile size={18} className="" />
                                   </div>
-                                  <DropdownMenu>
-                                    <DropdownMenuTrigger
-                                      asChild
-                                      className="rounded-sm hover:bg-gray-100 transition-all cursor-pointer"
-                                    >
-                                      <EllipsisIcon size={18} />
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                                      <DropdownMenuItem>
-                                        Copy text
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem>
-                                        Copy link to comment
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem>
-                                        Delete
-                                      </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                  </DropdownMenu>
+                                  <MoreActions>
+                                    <CommentActions />
+                                  </MoreActions>
                                 </div>
                               </div>
                               <p className="text-xs">{comment.content}</p>
