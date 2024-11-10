@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label";
 import { Calendar, Edit2, Inbox, InboxIcon, MessageSquare } from "lucide-react";
 import React, { useState } from "react";
 import AddTaskForm from "@/components/form/add-task";
-import MoreOptions from "./more-options";
 import { useTask } from "@/hooks/task";
 import { Separator } from "@radix-ui/react-separator";
 import dynamic from "next/dynamic";
@@ -50,11 +49,7 @@ const Task = ({ task, userId }: Props) => {
         />
       ) : (
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
-          <div
-            className="p-2 flex flex-col gap-1"
-            onMouseEnter={() => console.log("enter")}
-            onMouseLeave={() => console.log("leave")}
-          >
+          <div className="p-2 flex flex-col gap-1 group">
             <div className="flex justify-between items-center">
               <div className="flex gap-2">
                 <Label htmlFor="taskCheckbox">
@@ -83,7 +78,7 @@ const Task = ({ task, userId }: Props) => {
                   </div>
                 </DialogTrigger>
               </div>
-              <div className="flex items-center gap-1">
+              <div className="hidden group-hover:flex group-hover:items-center group-hover:gap-1">
                 <Edit2
                   className="text-gray-400 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-950"
                   size={16}
