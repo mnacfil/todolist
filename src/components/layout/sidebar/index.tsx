@@ -7,8 +7,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { CirclePlus, PanelRight, Plus, PlusCircle, Search } from "lucide-react";
-import React from "react";
+import { CirclePlus, PanelRight, Search } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { UserDropdown } from "./user-dropdown";
 import {
   favoriteLinks,
@@ -24,161 +24,213 @@ type Props = {};
 
 const Sidebar = (props: Props) => {
   const pathname = usePathname();
+  const [open, setOpen] = useState(true);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const onResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", onResize);
+
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   return (
-    <>
-      <div className="flex items-center justify-between">
-        <UserDropdown />
-        <div>
+    <div className="">
+      <div className="sm:hidden block p-4">
+        {windowWidth <= 640 ? (
           <Sheet>
             <SheetTrigger asChild>
               <PanelRight className="w-4 h-4 opacity-50 cursor-pointer" />
             </SheetTrigger>
-            <SheetContent className="w-[400px] sm:w-[300px]" side="left">
+            <SheetContent className="w-[250px]" side="left">
               <SheetHeader>
                 <SheetTitle>My Name</SheetTitle>
               </SheetHeader>
               <div>More Content</div>
             </SheetContent>
           </Sheet>
-        </div>
+        ) : (
+          <PanelRight
+            className="w-4 h-4 opacity-50 cursor-pointer"
+            onClick={() => setOpen(true)}
+          />
+        )}
       </div>
-      <Dialog>
-        <DialogTrigger>
-          <div className="flex items-center space-x-1 cursor-pointer my-3">
-            <CirclePlus className="w-6 h-6 ml-[-3px] fill-red-500 text-white" />
-            <p className="text-sm font-semibold file:text-red-800">Add task</p>
+      {open ? (
+        <div className="w-[280px] h-screen hidden sm:block bg-orange-50/50  p-4">
+          <div className="flex items-center justify-between">
+            <UserDropdown />
+            <div>
+              <PanelRight
+                className="w-4 h-4 opacity-50 cursor-pointer"
+                onClick={() => setOpen(false)}
+              />
+            </div>
           </div>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[700px]">
-          {/* <AddTask user={user} /> */}
-          <p>Add task</p>
-        </DialogContent>
-      </Dialog>
-
-      <div className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-100 rounded-sm">
-        <Search className="w-4 h-4 opacity-50" />
-        <p className="text-primary text-sm">Search</p>
-      </div>
-      <div className="flex flex-col w-full">
-        {sidebarLinks.map((link) => {
-          const isActive = link.href === pathname;
-          return (
-            <Link
-              key={link.title}
-              href={link.href}
-              className={clsx(
-                `flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm`,
-                isActive ? "bg-orange-400/10" : "bg-none"
-              )}
-            >
-              <div className="flex items-center space-x-2">
-                <link.Icon
-                  className={clsx(
-                    "w-4 h-4 opacity-50",
-                    isActive && "text-red-700"
-                  )}
-                />
-                <p
-                  className={clsx(
-                    "text-primary text-sm",
-                    isActive && "text-red-800"
-                  )}
-                >
-                  {link.title}
+          <Dialog>
+            <DialogTrigger>
+              <div className="flex items-center space-x-1 cursor-pointer my-3">
+                <CirclePlus className="w-6 h-6 ml-[-3px] fill-red-500 text-white" />
+                <p className="text-sm font-semibold file:text-red-800">
+                  Add task
                 </p>
               </div>
-              <p
-                className={clsx(
-                  "text-muted-foreground/50 text-sm",
-                  isActive && "text-red-800"
-                )}
-              >
-                3
-              </p>
-            </Link>
-          );
-        })}
-      </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[700px]">
+              {/* <AddTask user={user} /> */}
+              <p>Add task</p>
+            </DialogContent>
+          </Dialog>
 
-      <div className="mt-5 space-y-3">
-        <p className="text-sm font-semibold text-gray-500">Favorites</p>
-        <div className="flex flex-col w-full space-y-3">
-          {favoriteLinks.map((link) => {
-            const isActive = link.href === pathname;
-            return (
-              <Link
-                key={link.title}
-                href={link.href}
-                className="flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm"
-              >
-                <div className="flex items-center space-x-2">
-                  <link.Icon className="w-4 h-4 opacity-50" />
-                  <p className="text-primary text-sm">{link.title}</p>
-                </div>
-                <p
+          <div className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-100 rounded-sm">
+            <Search className="w-4 h-4 opacity-50" />
+            <p className="text-primary text-sm">Search</p>
+          </div>
+          <div className="flex flex-col w-full">
+            {sidebarLinks.map((link) => {
+              const isActive = link.href === pathname;
+              return (
+                <Link
+                  key={link.title}
+                  href={link.href}
                   className={clsx(
-                    "text-muted-foreground/50 text-sm",
-                    isActive && "text-red-800"
+                    `flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm`,
+                    isActive ? "bg-orange-400/10" : "bg-none"
                   )}
                 >
-                  3
-                </p>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="mt-5 space-y-3">
-        <div className="flex items-center space-x-1">
-          <p className="text-sm font-semibold text-gray-500">My Projects</p>
-          <span className="text-xs text-gray-500 p-[2px] bg-gray-100 rounded-sm font-semibold">
-            USED: 5/5
-          </span>
-        </div>
-        <div className="flex flex-col w-full">
-          {projectsLinks.map((link) => {
-            const isActive = link.href === pathname;
-            return (
-              <Link
-                key={link.title}
-                href={link.href}
-                className={clsx(
-                  `flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm`,
-                  isActive ? "bg-orange-400/10" : "bg-none"
-                )}
-              >
-                <div className="flex items-center space-x-2">
-                  <link.Icon
-                    className={clsx(
-                      "w-4 h-4 opacity-50",
-                      isActive && "text-red-700"
-                    )}
-                  />
+                  <div className="flex items-center space-x-2">
+                    <link.Icon
+                      className={clsx(
+                        "w-4 h-4 opacity-50",
+                        isActive && "text-red-700"
+                      )}
+                    />
+                    <p
+                      className={clsx(
+                        "text-primary text-sm",
+                        isActive && "text-red-800"
+                      )}
+                    >
+                      {link.title}
+                    </p>
+                  </div>
                   <p
                     className={clsx(
-                      "text-primary text-sm",
+                      "text-muted-foreground/50 text-sm",
                       isActive && "text-red-800"
                     )}
                   >
-                    {link.title}
+                    3
                   </p>
-                </div>
-                <p
-                  className={clsx(
-                    "text-muted-foreground/50 text-sm",
-                    isActive && "text-red-800"
-                  )}
-                >
-                  3
-                </p>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="mt-5 space-y-3">
+            <p className="text-sm font-semibold text-gray-500">Favorites</p>
+            <div className="flex flex-col w-full space-y-3">
+              {favoriteLinks.map((link) => {
+                const isActive = link.href === pathname;
+                return (
+                  <Link
+                    key={link.title}
+                    href={link.href}
+                    className="flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <link.Icon className="w-4 h-4 opacity-50" />
+                      <p className="text-primary text-sm">{link.title}</p>
+                    </div>
+                    <p
+                      className={clsx(
+                        "text-muted-foreground/50 text-sm",
+                        isActive && "text-red-800"
+                      )}
+                    >
+                      3
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="mt-5 space-y-3">
+            <div className="flex items-center space-x-1">
+              <p className="text-sm font-semibold text-gray-500">My Projects</p>
+              <span className="text-xs text-gray-500 p-[2px] bg-gray-100 rounded-sm font-semibold">
+                USED: 5/5
+              </span>
+            </div>
+            <div className="flex flex-col w-full">
+              {projectsLinks.map((link) => {
+                const isActive = link.href === pathname;
+                return (
+                  <Link
+                    key={link.title}
+                    href={link.href}
+                    className={clsx(
+                      `flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm`,
+                      isActive ? "bg-orange-400/10" : "bg-none"
+                    )}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <link.Icon
+                        className={clsx(
+                          "w-4 h-4 opacity-50",
+                          isActive && "text-red-700"
+                        )}
+                      />
+                      <p
+                        className={clsx(
+                          "text-primary text-sm",
+                          isActive && "text-red-800"
+                        )}
+                      >
+                        {link.title}
+                      </p>
+                    </div>
+                    <p
+                      className={clsx(
+                        "text-muted-foreground/50 text-sm",
+                        isActive && "text-red-800"
+                      )}
+                    >
+                      3
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
         </div>
-      </div>
-    </>
+      ) : (
+        <div className="p-4">
+          {windowWidth <= 640 ? (
+            <Sheet>
+              <SheetTrigger asChild>
+                <PanelRight className="w-4 h-4 opacity-50 cursor-pointer" />
+              </SheetTrigger>
+              <SheetContent className="w-[250px]" side="left">
+                <SheetHeader>
+                  <SheetTitle>My Name</SheetTitle>
+                </SheetHeader>
+                <div>More Content</div>
+              </SheetContent>
+            </Sheet>
+          ) : (
+            <PanelRight
+              className="w-4 h-4 opacity-50 cursor-pointer"
+              onClick={() => setOpen(true)}
+            />
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 

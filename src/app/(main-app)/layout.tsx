@@ -15,10 +15,8 @@ const AppLayout = async ({ children }: Props) => {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="h-screen w-full flex">
-        <div className="w-[300px] h-screen bg-orange-50/50 hidden lg:block p-4">
-          <Sidebar />
-        </div>
-        <div className="flex-1 mx-auto max-w-screen-lg h-full py-10 px-14">
+        <Sidebar />
+        <div className="flex-1 mx-auto max-w-screen-lg h-full p-3 md:py-10 md:px-14 ">
           {children}
         </div>
       </main>
