@@ -4,7 +4,6 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import React from "react";
 
 type Props = {
   children: React.ReactNode;
@@ -12,6 +11,7 @@ type Props = {
 
 const AppLayout = async ({ children }: Props) => {
   const queryClient = new QueryClient();
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="h-screen w-full flex">

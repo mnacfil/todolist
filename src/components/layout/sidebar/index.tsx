@@ -25,17 +25,17 @@ type Props = {};
 const Sidebar = (props: Props) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(0);
 
-  useEffect(() => {
-    const onResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
+  // useEffect(() => {
+  //   const onResize = () => {
+  //     setWindowWidth(window.innerWidth);
+  //   };
 
-    window.addEventListener("resize", onResize);
+  //   window.addEventListener("resize", onResize);
 
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
+  //   return () => window.removeEventListener("resize", onResize);
+  // }, []);
 
   return (
     <div className="">

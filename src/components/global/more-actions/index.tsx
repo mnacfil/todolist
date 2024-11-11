@@ -1,6 +1,7 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuPortal,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import clsx from "clsx";
@@ -22,14 +23,16 @@ const MoreActions = ({
 }: Props) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className={triggerClassName}>
+      <DropdownMenuTrigger className={triggerClassName}>
         {trigger || (
           <Ellipsis size={16} className="text-gray-400 cursor-pointer" />
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent className={clsx("w-56", contentClassName)}>
-        {children}
-      </DropdownMenuContent>
+      <DropdownMenuPortal>
+        <DropdownMenuContent className={clsx("w-56", contentClassName)}>
+          {children}
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
     </DropdownMenu>
   );
 };
