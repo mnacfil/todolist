@@ -18,19 +18,20 @@ import dynamic from "next/dynamic";
 import MoreActions from "../more-actions";
 import { HeaderActions, TaskActions } from "./task-overview/actions";
 
+export enum TaskType {
+  MAIN_TASK,
+  SUB_TASK,
+}
+
 type Props = {
   task: any;
   userId: string;
+  type?: TaskType;
 };
-
-// TODO
-// when the request is fail, it still show up in the UI
-// but when you refresh it not.
-// when the request is fail. it must be not show in the UI
 
 const TaskOverview = dynamic(() => import("./task-overview"));
 
-const Task = ({ task, userId }: Props) => {
+const Task = ({ task, userId, type }: Props) => {
   const { deleteMutate } = useTask(userId);
   const [isEditing, setIsEditing] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
@@ -49,7 +50,7 @@ const Task = ({ task, userId }: Props) => {
         />
       ) : (
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
-          <div className="p-2 flex flex-col gap-1">
+          <div className="p-2 flex flex-col gap-1 group">
             <div className="flex justify-between items-center">
               <div className="flex gap-2">
                 <Label htmlFor="taskCheckbox">
@@ -78,7 +79,7 @@ const Task = ({ task, userId }: Props) => {
                   </div>
                 </DialogTrigger>
               </div>
-              <div className=" flex items-center gap-1">
+              <div className="flex items-center gap-2 flex">
                 <Edit2
                   className="text-gray-400 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-950"
                   size={16}
@@ -113,11 +114,7 @@ const Task = ({ task, userId }: Props) => {
             </DialogHeader>
             <Separator className="h-[1px] bg-gray-200" />
             <div className="flex flex-row flex-1">
-              <TaskOverview
-                userId={userId}
-                task={task}
-                onOpenChange={setShowDialog}
-              />
+              <TaskOverview userId={userId} task={task} />
               <div className="bg-orange-100/50 min-w-[300px] h-auto">Side</div>
             </div>
           </DialogContent>
@@ -128,3 +125,8 @@ const Task = ({ task, userId }: Props) => {
 };
 
 export default Task;
+
+// TODO
+// when the request is fail, it still show up in the UI
+// but when you refresh it not.
+// when the request is fail. it must be not show in the UI

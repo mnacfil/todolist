@@ -4,6 +4,7 @@ import { getUserTasks } from "@/actions/task";
 import Task from "@/components/global/task";
 import ToggleAddTask from "@/components/global/toggle-add-task";
 import { appKeys } from "@/lib/react-query";
+import { Prisma } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { CircleCheckBigIcon } from "lucide-react";
 

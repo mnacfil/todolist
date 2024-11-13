@@ -35,10 +35,10 @@ import { Input } from "@/components/ui/input";
 type Props = {
   userId: string;
   task: Prisma.TaskCreateInput;
-  onOpenChange: React.Dispatch<SetStateAction<boolean>>;
+  onOpenChange?: React.Dispatch<SetStateAction<boolean>>;
 };
 
-const TaskOverViewForm = ({ onOpenChange, task, userId }: Props) => {
+const TaskOverViewForm = ({ task, userId }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const ref = useRef<HTMLFormElement | null>(null);
   const { isUpdating, updateMutate } = useTask(userId);
@@ -58,7 +58,6 @@ const TaskOverViewForm = ({ onOpenChange, task, userId }: Props) => {
       id: task?.id as string,
       data: { ...values, author: { connect: { clerkId: userId } } },
     });
-    onOpenChange(true);
   };
 
   return (
