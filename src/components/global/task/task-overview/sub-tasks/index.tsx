@@ -6,25 +6,35 @@ import { Prisma } from "@prisma/client";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
 import { useSubTask } from "@/hooks/task";
 import { TaskType } from "../..";
+import { useQuery } from "@tanstack/react-query";
+import { getTaskSubTasksOptions } from "@/lib/react-query/options";
 
 type Props = {
   task: Prisma.TaskCreateInput;
-  subTasks: Prisma.SubTaskCreateInput[];
   userId: string;
 };
 
-const SubTasks = ({ task, subTasks, userId }: Props) => {
-  const [isAddingSubTask, setIsAddingSubTask] = useState(false);
+const SubTasks = ({ task, userId }: Props) => {
+  const { data, isPending } = useQuery(
+    getTaskSubTasksOptions(task?.id as string)
+  );
   const { subTaskMutation } = useSubTask(userId);
+
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col gap-4 w-full">
-      {subTasks?.length > 0 ? (
-        <HideAndShow label="Sub tasks" subLabel={`${0}/${subTasks.length}`}>
+      {data?.subTasks && data.subTasks?.length > 0 ? (
+        <HideAndShow
+          label="Sub tasks"
+          subLabel={`${0}/${data.subTasks.length}`}
+        >
           <div className="divide-y flex flex-col">
-            {subTasks.map((subTask) => (
+            {data.subTasks.map((subTask) => (
               <div key={subTask.id} className="flex gap-2 py-2">
                 <Label htmlFor="subtaskCheckbox">
                   <Checkbox

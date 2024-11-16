@@ -59,6 +59,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { priorities } from "@/components/constants";
 import { Card } from "@/components/ui/card";
+import { useQueryClient } from "@tanstack/react-query";
+import { appKeys } from "@/lib/react-query/keys";
 
 type Props = {
   userId: string;
@@ -80,7 +82,8 @@ const AddTaskForm = ({
   const pathname = usePathname();
   const [taskPriority, setTaskPriority] = useState<TaskPriority>("p4");
   const { isPending, isUpdating, mutate, updateMutate } = useTask(userId);
-  const { subTaskMutation } = useSubTask(userId);
+  const { subTaskMutation } = useSubTask(currentTask?.id as string);
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof AddTaskFormSchema>>({
     resolver: zodResolver(AddTaskFormSchema),
@@ -97,6 +100,21 @@ const AddTaskForm = ({
 
   const onSubmit = async (values: z.infer<typeof AddTaskFormSchema>) => {
     try {
+      if (isAddingSubTask) {
+        subTaskMutation.create.mutate({
+          ...values,
+          author: {
+            connect: {
+              clerkId: userId,
+            },
+          },
+          task: {
+            connect: {
+              id: currentTask?.id,
+            },
+          },
+        });
+      }
       if (isEditing) {
         if (currentTask?.id) {
           updateMutate({
@@ -105,30 +123,9 @@ const AddTaskForm = ({
           });
         }
       }
-      if (isAddingSubTask) {
-        subTaskMutation.create.mutate({
-          userId,
-          taskId: currentTask?.id as string,
-          data: {
-            ...values,
-            author: {
-              connect: {
-                clerkId: userId,
-              },
-            },
-            task: {
-              connect: {
-                id: currentTask?.id,
-              },
-            },
-          },
-        });
-      }
       if (!isEditing && !isAddingSubTask) {
         mutate({
-          title: values.title,
-          description: values.description,
-          priority: values.priority,
+          ...values,
           author: {
             connect: {
               clerkId: userId,
@@ -166,7 +163,6 @@ const AddTaskForm = ({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="description"
@@ -187,50 +183,6 @@ const AddTaskForm = ({
           />
 
           <div className="flex gap-2 items-center m-3">
-            {/* <FormField
-            control={form.control}
-            name="dueDate"
-            render={({ field }) => (
-              <FormItem>
-                <TooltipProvider>
-                  <Tooltip>
-                    <FormControl>
-                      <Popover>
-                        <TooltipTrigger asChild>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className={cn(
-                                "font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              <CalendarIcon className="mr-1 h-4 w-4 opacity-50" />
-                              {field.value ? (
-                                format(field.value, "PP")
-                              ) : (
-                                <span>Due date</span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                        </TooltipTrigger>
-                        <TooltipContent>Set due date</TooltipContent>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={field.onChange}
-                            initialFocus
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                  </Tooltip>
-                </TooltipProvider>
-              </FormItem>
-            )}
-          /> */}
-            {/* Todo */}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>

@@ -31,11 +31,7 @@ const TaskOverview = ({ userId, task }: Props) => {
             <div className="flex-1 flex-col">
               <TaskOverviewForm task={task} userId={userId} />
               <div className="flex flex-col gap-4 w-full">
-                <SubTasks
-                  task={task}
-                  subTasks={task?.subTasks}
-                  userId={userId}
-                />
+                <SubTasks task={task} userId={userId} />
                 <Comments comments={task.comments} task={task} />
               </div>
             </div>

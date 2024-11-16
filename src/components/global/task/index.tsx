@@ -10,13 +10,18 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Calendar, Edit2, Inbox, InboxIcon, MessageSquare } from "lucide-react";
-import React, { useState } from "react";
+import React, { useOptimistic, useState } from "react";
 import AddTaskForm from "@/components/form/add-task";
 import { useTask } from "@/hooks/task";
 import { Separator } from "@radix-ui/react-separator";
 import dynamic from "next/dynamic";
 import MoreActions from "../more-actions";
 import { HeaderActions, TaskActions } from "./task-overview/actions";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  getTaskCommentsOptions,
+  getTaskSubTasksOptions,
+} from "@/lib/react-query/options";
 
 export enum TaskType {
   MAIN_TASK,
@@ -32,6 +37,7 @@ type Props = {
 const TaskOverview = dynamic(() => import("./task-overview"));
 
 const Task = ({ task, userId, type }: Props) => {
+  const queryClient = useQueryClient();
   const { deleteMutate } = useTask(userId);
   const [isEditing, setIsEditing] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
@@ -50,7 +56,7 @@ const Task = ({ task, userId, type }: Props) => {
         />
       ) : (
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
-          <div className="p-2 flex flex-col gap-1 group">
+          <div className="p-2 flex flex-col gap-1">
             <div className="flex justify-between items-center">
               <div className="flex gap-2">
                 <Label htmlFor="taskCheckbox">
@@ -67,6 +73,14 @@ const Task = ({ task, userId, type }: Props) => {
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
+                  onMouseEnter={async () => {
+                    await queryClient.prefetchQuery(
+                      getTaskSubTasksOptions(task.id)
+                    );
+                    await queryClient.prefetchQuery(
+                      getTaskCommentsOptions(task.id)
+                    );
+                  }}
                 >
                   <div
                     className="flex flex-col gap-[0.5px]"
@@ -79,7 +93,7 @@ const Task = ({ task, userId, type }: Props) => {
                   </div>
                 </DialogTrigger>
               </div>
-              <div className="flex items-center gap-2 flex">
+              <div className="flex items-center gap-2">
                 <Edit2
                   className="text-gray-400 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-950"
                   size={16}

@@ -1,4 +1,9 @@
 import Sidebar from "@/components/layout/sidebar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  getTaskOptions,
+  getTotalTasksOptions,
+} from "@/lib/react-query/options";
 import {
   dehydrate,
   HydrationBoundary,
@@ -12,13 +17,17 @@ type Props = {
 const AppLayout = async ({ children }: Props) => {
   const queryClient = new QueryClient();
 
+  // prefetch all tasks
+  await queryClient.prefetchQuery(getTaskOptions);
+  await queryClient.prefetchQuery(getTotalTasksOptions);
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="h-screen w-full flex">
         <Sidebar />
-        <div className="flex-1 mx-auto max-w-screen-mdz h-full p-3 md:py-10 md:px-14 ">
+        <ScrollArea className="mx-auto container 2xl:px-14 ">
           {children}
-        </div>
+        </ScrollArea>
       </main>
     </HydrationBoundary>
   );

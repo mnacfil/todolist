@@ -38,7 +38,7 @@ const Sidebar = (props: Props) => {
   // }, []);
 
   return (
-    <div className="">
+    <div className="h-screen">
       <div className="sm:hidden block p-4">
         {windowWidth <= 640 ? (
           <Sheet>

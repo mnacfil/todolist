@@ -15,7 +15,7 @@ type Props = {
 const Comments = ({ task, comments }: Props) => {
   return (
     <>
-      {(task?.comments as Prisma.CommentCreateInput[]).length > 0 && (
+      {(task?.comments as Prisma.CommentCreateInput[])?.length > 0 && (
         <HideAndShow label="Comments" subLabel={comments?.length.toString()}>
           <div className="flex flex-col overflow-y-auto">
             {comments.map((comment: any) => (

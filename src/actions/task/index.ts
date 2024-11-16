@@ -1,8 +1,45 @@
 "use server";
 
 import { prisma } from "@/lib/db";
+import { unstableCache } from "@/lib/unstable-cache";
 import { Prisma } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+
+export const getTasks = async () => {
+  try {
+    const tasks = await prisma.task.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return {
+      tasks,
+      status: 200,
+      message: "Successfully get the tasks.",
+    };
+  } catch (error) {
+    return {
+      status: 400,
+      tasks: null,
+      message: "Something went wrong, Please try again later.",
+    };
+  }
+};
+
+export const getTotalTasks = unstableCache(async () => {
+  try {
+    const total = await prisma.task.count();
+    return {
+      status: 200,
+      total,
+    };
+  } catch (error) {
+    return {
+      status: 400,
+      total: 0,
+    };
+  }
+});
 
 export const getUserTasks = async (id: string) => {
   try {
@@ -46,29 +83,11 @@ export const getUserTasks = async (id: string) => {
   }
 };
 
-export const createSubTask = async ({
-  taskId,
-  userId,
-  data,
-}: {
-  taskId: string;
-  userId: string;
-  data: Prisma.SubTaskCreateInput;
-}) => {
+export const createSubTask = async (data: Prisma.SubTaskCreateInput) => {
   try {
     const subTask = await prisma.subTask.create({
       data: {
         ...data,
-        author: {
-          connect: {
-            clerkId: userId,
-          },
-        },
-        task: {
-          connect: {
-            id: taskId,
-          },
-        },
       },
     });
     return {
@@ -150,20 +169,13 @@ export const deleteSubTask = async (id: string, taskId: string) => {
 
 export const createTask = async ({
   data,
-  userId,
 }: {
   data: Prisma.TaskCreateInput;
-  userId: string;
 }) => {
   try {
     const task = await prisma.task.create({
       data: {
         ...data,
-        author: {
-          connect: {
-            clerkId: userId,
-          },
-        },
       },
     });
 
@@ -269,4 +281,92 @@ export const getCurrentUser = async () => {
     },
   });
   return user;
+};
+
+export const getTaskSubTasks = async (taskId: string) => {
+  if (!taskId) {
+    return {
+      status: 400,
+      message: "Invalid task id.",
+    };
+  }
+  try {
+    const subTasks = await prisma.subTask.findMany({
+      where: {
+        taskId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    if (subTasks && subTasks.length > 0) {
+      return {
+        status: 200,
+        subTasks,
+        message: "There are your sub tasks.",
+      };
+    }
+    return {
+      status: 404,
+      subTasks: [],
+      message: "No subtask for this task.",
+    };
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      return {
+        status: error.code,
+        subTasks: null,
+        message: error.message,
+      };
+    }
+    return {
+      status: 400,
+      subTasks: [],
+      message: "Something went wrong.",
+    };
+  }
+};
+
+export const getTaskComments = async (taskId: string) => {
+  if (!taskId) {
+    return {
+      status: 400,
+      message: "Invalid task id.",
+    };
+  }
+  try {
+    const comments = await prisma.comment.findMany({
+      where: {
+        taskId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    if (comments && comments.length > 0) {
+      return {
+        status: 200,
+        comments,
+        message: "There are your sub tasks.",
+      };
+    }
+    return {
+      status: 404,
+      comments: [],
+      message: "No comments for this task.",
+    };
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      return {
+        status: error.code,
+        comments: null,
+        message: error.message,
+      };
+    }
+    return {
+      status: 400,
+      subtcommentsasks: [],
+      message: "Something went wrong.",
+    };
+  }
 };
