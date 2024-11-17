@@ -17,6 +17,7 @@ model User {
   tasks     Task[]
   SubTask   SubTask[]
   Comment   Comment[]
+  Project   Project[]
 }
 
 model Task {
@@ -33,6 +34,10 @@ model Task {
   labels      String?
   subTasks    SubTask[]
   comments    Comment[]
+  Project     Project?  @relation(fields: [projectId], references: [id])
+  projectId   String?
+  Section     Section?  @relation(fields: [sectionId], references: [id])
+  sectionId   String?
 }
 
 // Project model
@@ -70,4 +75,25 @@ model Comment {
   reply     Comment[] @relation(name: "CommentToComments")
   Comment   Comment?  @relation(name: "CommentToComments", fields: [commentId], references: [id])
   commentId String?
+}
+
+model Section {
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tasks     Task[]
+  Project   Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String?
+}
+
+model Project {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  title     String
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  tasks     Task[]
+  section   Section[]
 }

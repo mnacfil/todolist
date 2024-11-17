@@ -2,6 +2,8 @@ import { createComment, deleteComment, updateComment } from "@/actions/comment";
 import { appKeys } from "@/lib/react-query/keys";
 import { Prisma } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+// TODO
+// update also the date when updating.
 
 export const useComment = (taskId: string) => {
   const queryClient = useQueryClient();
