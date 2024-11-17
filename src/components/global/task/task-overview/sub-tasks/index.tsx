@@ -20,7 +20,7 @@ const SubTasks = ({ task, userId }: Props) => {
   const { data, isPending } = useQuery(
     getTaskSubTasksOptions(task?.id as string)
   );
-  const { subTaskMutation } = useSubTask(userId);
+  const { subTaskMutation } = useSubTask(task?.id as string);
 
   if (isPending) {
     return <div>Loading...</div>;
@@ -43,7 +43,7 @@ const SubTasks = ({ task, userId }: Props) => {
                     onClick={(e) => {
                       e.stopPropagation();
                       subTaskMutation.delete.mutate({
-                        id: subTask.id as string,
+                        subTaskId: subTask.id as string,
                         taskId: task.id as string,
                       });
                     }}

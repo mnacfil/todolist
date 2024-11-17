@@ -155,21 +155,20 @@ export const useSubTask = (taskId: string) => {
     },
     onMutate: (payload) => {
       queryClient.cancelQueries({ queryKey: appKeys.getTaskSubTasks(taskId) });
-      const previousTasks = queryClient.getQueryData<
-        Prisma.SubTaskCreateInput[]
-      >(appKeys.getTaskSubTasks(taskId));
-
+      const previousSubTasks = queryClient.getQueryData(
+        appKeys.getTaskSubTasks(taskId)
+      );
       queryClient.setQueryData(appKeys.getTaskSubTasks(taskId), (old: any) => ({
         ...old,
         ["subTasks"]: [payload, ...old.subTasks],
       }));
 
-      return { previousTasks };
+      return { previousSubTasks };
     },
     onError: (error, payload, context) => {
       queryClient.setQueryData(
         appKeys.getTaskSubTasks(taskId),
-        context?.previousTasks
+        context?.previousSubTasks
       );
       console.log(error);
     },
@@ -190,36 +189,35 @@ export const useSubTask = (taskId: string) => {
   });
 
   const deleteSubtaskMutationResult = useMutation({
-    mutationFn: async ({ id, taskId }: { id: string; taskId: string }) => {
-      return await deleteSubTask(id, taskId);
+    mutationFn: async ({
+      subTaskId,
+      taskId,
+    }: {
+      subTaskId: string;
+      taskId: string;
+    }) => {
+      return await deleteSubTask(subTaskId, taskId);
     },
     onMutate: (payload) => {
-      queryClient.cancelQueries({ queryKey: appKeys.getUserTask(userId) });
+      queryClient.cancelQueries({ queryKey: appKeys.getTaskSubTasks(taskId) });
 
-      const previousTasks = queryClient.getQueryData<Prisma.TaskCreateInput[]>(
-        appKeys.getUserTask(userId)
+      const previousSubTasks = queryClient.getQueryData(
+        appKeys.getTaskSubTasks(taskId)
       );
-
-      queryClient.setQueryData(appKeys.getUserTask(userId), (old: any) => ({
+      queryClient.setQueryData(appKeys.getTaskSubTasks(taskId), (old: any) => ({
         ...old,
-        ["data"]: old.data.map((task: Prisma.TaskCreateInput) =>
-          task.id === payload.taskId
-            ? {
-                ...task,
-                subTasks: (
-                  task?.subTasks as Prisma.SubTaskCreateInput[]
-                ).filter((subtask) => subtask.id !== payload.id),
-              }
-            : task
+        ["subTasks"]: old?.subTasks?.filter(
+          (subTask: Prisma.SubTaskCreateInput) =>
+            subTask.id !== payload.subTaskId
         ),
       }));
 
-      return { previousTasks };
+      return { previousSubTasks };
     },
     onError: (error, payload, context) => {
       queryClient.setQueryData(
-        appKeys.getUserTask(userId),
-        context?.previousTasks
+        appKeys.getTaskSubTasks(taskId),
+        context?.previousSubTasks
       );
       console.log(error);
     },
@@ -234,7 +232,7 @@ export const useSubTask = (taskId: string) => {
         });
       }
       queryClient.invalidateQueries({
-        queryKey: appKeys.getUserTask(userId),
+        queryKey: appKeys.getTaskSubTasks(taskId),
       });
     },
   });
