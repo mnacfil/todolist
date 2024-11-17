@@ -106,14 +106,12 @@ export const createSubTask = async (data: Prisma.SubTaskCreateInput) => {
 
 export const updateSubTask = async ({
   data,
-  id,
-  taskId,
+  subTaskId,
 }: {
-  id: string;
-  taskId: string;
+  subTaskId: string;
   data: Prisma.SubTaskCreateInput;
 }) => {
-  if (!id || !taskId) {
+  if (!subTaskId) {
     return {
       status: 400,
       data: null,
@@ -122,7 +120,7 @@ export const updateSubTask = async ({
   }
   try {
     const subtask = await prisma.subTask.update({
-      where: { id, taskId },
+      where: { id: subTaskId },
       data: { ...data },
     });
     return {

@@ -239,44 +239,36 @@ export const useSubTask = (taskId: string) => {
 
   const updateSubtaskMutationResult = useMutation({
     mutationFn: async ({
-      id,
-      taskId,
+      subTaskId,
       data,
     }: {
-      id: string;
-      taskId: string;
+      subTaskId: string;
       data: Prisma.SubTaskCreateInput;
     }) => {
-      return await updateSubTask({ id, taskId, data });
+      return await updateSubTask({ subTaskId, data });
     },
     onMutate: (payload) => {
-      queryClient.cancelQueries({ queryKey: appKeys.getUserTask(userId) });
+      queryClient.cancelQueries({ queryKey: appKeys.getTaskSubTasks(taskId) });
 
-      const previousTasks = queryClient.getQueryData<Prisma.TaskCreateInput[]>(
-        appKeys.getUserTask(userId)
+      const previousSubTasks = queryClient.getQueryData(
+        appKeys.getTaskSubTasks(taskId)
       );
 
-      queryClient.setQueryData(appKeys.getUserTask(userId), (old: any) => ({
+      console.log(previousSubTasks);
+
+      queryClient.setQueryData(appKeys.getTaskSubTasks(taskId), (old: any) => ({
         ...old,
-        ["data"]: old.data.map((task: Prisma.TaskCreateInput) =>
-          task.id === payload.taskId
-            ? {
-                ...task,
-                subTasks: (task?.subTasks as Prisma.SubTaskCreateInput[]).map(
-                  (subtask) =>
-                    subtask.id === payload.id ? payload.data : subtask
-                ),
-              }
-            : task
+        ["subTasks"]: old.subTasks.map((subTask: Prisma.SubTaskCreateInput) =>
+          subTask.id === payload.subTaskId ? payload.data : subTask
         ),
       }));
 
-      return { previousTasks };
+      return { previousSubTasks };
     },
     onError: (error, payload, context) => {
       queryClient.setQueryData(
-        appKeys.getUserTask(userId),
-        context?.previousTasks
+        appKeys.getTaskSubTasks(taskId),
+        context?.previousSubTasks
       );
       console.log(error);
     },
@@ -291,7 +283,7 @@ export const useSubTask = (taskId: string) => {
         });
       }
       queryClient.invalidateQueries({
-        queryKey: appKeys.getUserTask(userId),
+        queryKey: appKeys.getTaskSubTasks(taskId),
       });
     },
   });

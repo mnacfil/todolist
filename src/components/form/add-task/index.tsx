@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../../ui/form";
-import { Prisma } from "@prisma/client";
+import { Prisma, SubTask } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import {
   CalendarIcon,
@@ -23,9 +23,7 @@ import {
   FlagIcon,
   XIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import clsx from "clsx";
-import { createSubTask, createTask, updateTask } from "@/actions/task";
 import { toast } from "sonner";
 import { useSubTask, useTask } from "@/hooks/task";
 import { AddTaskFormSchema } from "./schema";
@@ -59,15 +57,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { priorities } from "@/components/constants";
 import { Card } from "@/components/ui/card";
-import { useQueryClient } from "@tanstack/react-query";
-import { appKeys } from "@/lib/react-query/keys";
 
 type Props = {
   userId: string;
+  taskId?: string;
   isEditing?: boolean;
-  currentTask?: Prisma.TaskCreateInput;
+  currentTask?: Prisma.TaskCreateInput | SubTask;
   onCancel?: () => void;
-  isAddingSubTask?: boolean;
+  type?: "main-task" | "sub-task";
 };
 
 type TaskPriority = "p1" | "p2" | "p3" | "p4";
@@ -75,15 +72,17 @@ type TaskPriority = "p1" | "p2" | "p3" | "p4";
 const AddTaskForm = ({
   isEditing = false,
   userId,
+  taskId,
   currentTask,
   onCancel,
-  isAddingSubTask = false,
+  type = "main-task",
 }: Props) => {
   const pathname = usePathname();
   const [taskPriority, setTaskPriority] = useState<TaskPriority>("p4");
   const { isPending, isUpdating, mutate, updateMutate } = useTask(userId);
-  const { subTaskMutation } = useSubTask(currentTask?.id as string);
-  const queryClient = useQueryClient();
+  const { subTaskMutation } = useSubTask(taskId ?? "");
+
+  console.log(taskId);
 
   const form = useForm<z.infer<typeof AddTaskFormSchema>>({
     resolver: zodResolver(AddTaskFormSchema),
@@ -100,38 +99,58 @@ const AddTaskForm = ({
 
   const onSubmit = async (values: z.infer<typeof AddTaskFormSchema>) => {
     try {
-      if (isAddingSubTask) {
-        subTaskMutation.create.mutate({
-          ...values,
-          author: {
-            connect: {
-              clerkId: userId,
+      if (type === "sub-task") {
+        if (isEditing) {
+          subTaskMutation.update.mutate({
+            subTaskId: currentTask?.id as string,
+            data: {
+              ...values,
+              author: {
+                connect: {
+                  clerkId: userId,
+                },
+              },
+              task: {
+                connect: {
+                  id: taskId,
+                },
+              },
             },
-          },
-          task: {
-            connect: {
-              id: currentTask?.id,
+          });
+        } else {
+          subTaskMutation.create.mutate({
+            ...values,
+            author: {
+              connect: {
+                clerkId: userId,
+              },
             },
-          },
-        });
-      }
-      if (isEditing) {
-        if (currentTask?.id) {
-          updateMutate({
-            id: currentTask?.id,
-            data: { ...values, author: { connect: { clerkId: userId } } },
+            task: {
+              connect: {
+                id: taskId,
+              },
+            },
           });
         }
       }
-      if (!isEditing && !isAddingSubTask) {
-        mutate({
-          ...values,
-          author: {
-            connect: {
-              clerkId: userId,
+      if (type === "main-task") {
+        if (isEditing) {
+          if (currentTask?.id) {
+            updateMutate({
+              id: currentTask?.id,
+              data: { ...values, author: { connect: { clerkId: userId } } },
+            });
+          }
+        } else {
+          mutate({
+            ...values,
+            author: {
+              connect: {
+                clerkId: userId,
+              },
             },
-          },
-        });
+          });
+        }
       }
     } catch (error) {
       console.log(error);
