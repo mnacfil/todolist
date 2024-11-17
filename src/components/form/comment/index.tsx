@@ -11,35 +11,53 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { File, Mic, Puzzle, Smile } from "lucide-react";
 import { useComment } from "@/hooks/comment/useComment";
+import { Comment } from "@prisma/client";
 
 type Props = {
   onCancel: () => void;
   userId: string;
   taskId: string;
+  isEditing?: boolean;
+  currentComment?: Comment;
 };
 
-const CommentForm = ({ onCancel, userId, taskId }: Props) => {
+const CommentForm = ({
+  onCancel,
+  userId,
+  taskId,
+  isEditing = false,
+  currentComment,
+}: Props) => {
   const form = useForm<z.infer<typeof CommentSchema>>({
     mode: "onSubmit",
     defaultValues: {
-      message: "",
+      message: isEditing ? currentComment?.content : "",
     },
   });
 
-  const { isPending, mutate } = useComment(userId);
+  const { commentMutation } = useComment(taskId);
 
   const onSubmit = (values: z.infer<typeof CommentSchema>) => {
-    //
-    mutate({
-      taskId,
-      userId,
-      data: {
+    if (isEditing) {
+      commentMutation.update.mutate({
+        commentId: currentComment?.id as string,
+        data: {
+          content: values.message,
+          author: {
+            connect: { clerkId: userId },
+          },
+          task: {
+            connect: { id: taskId },
+          },
+        },
+      });
+    } else {
+      commentMutation.create.mutate({
         content: values.message,
         author: {
           connect: {
@@ -51,8 +69,8 @@ const CommentForm = ({ onCancel, userId, taskId }: Props) => {
             id: taskId,
           },
         },
-      },
-    });
+      });
+    }
     form.reset();
   };
 
@@ -86,7 +104,7 @@ const CommentForm = ({ onCancel, userId, taskId }: Props) => {
               <Button variant="ghost" type="button" onClick={onCancel}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isPending}>
+              <Button type="submit" disabled={commentMutation.create.isPending}>
                 Comment
               </Button>
             </div>

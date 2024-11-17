@@ -4,13 +4,16 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
-type Props = {};
+type Props = {
+  onEdit: () => void;
+  onDelete: () => void;
+};
 
-const CommentActions = (props: Props) => {
+const CommentActions = ({ onDelete, onEdit }: Props) => {
   return (
     <>
       <DropdownMenuGroup>
-        <MoreActionItem iconName="pencil" label="Edit" />
+        <MoreActionItem iconName="pencil" label="Edit" onClick={onEdit} />
         <MoreActionItem iconName="copy" label="Copy text" />
         <MoreActionItem iconName="link" label="Copy link to comment" />
       </DropdownMenuGroup>
@@ -20,6 +23,7 @@ const CommentActions = (props: Props) => {
           iconName="trash-2"
           label="Delete"
           color="text-red-500"
+          onClick={onDelete}
         />
       </DropdownMenuGroup>
     </>

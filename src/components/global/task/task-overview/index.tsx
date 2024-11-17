@@ -32,7 +32,7 @@ const TaskOverview = ({ userId, task }: Props) => {
               <TaskOverviewForm task={task} userId={userId} />
               <div className="flex flex-col gap-4 w-full">
                 <SubTasks task={task} userId={userId} />
-                <Comments comments={task.comments} task={task} />
+                <Comments taskId={task?.id} userId={userId} />
               </div>
             </div>
           </div>
@@ -40,7 +40,7 @@ const TaskOverview = ({ userId, task }: Props) => {
         <div
           className={clsx(task?.comments?.length > 0 ? "ml-[42px]" : "ml-5")}
         >
-          <ToggleComment task={task} userId={userId} />
+          <ToggleComment taskId={task?.id} userId={userId} />
         </div>
       </div>
     </div>

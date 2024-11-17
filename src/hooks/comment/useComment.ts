@@ -1,62 +1,129 @@
-import { createComment } from "@/actions/comment";
-import { appKeys } from "@/lib/react-query";
+import { createComment, deleteComment, updateComment } from "@/actions/comment";
+import { appKeys } from "@/lib/react-query/keys";
 import { Prisma } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export const useComment = (userId: string) => {
+export const useComment = (taskId: string) => {
   const queryClient = useQueryClient();
-  const { isPending, mutate } = useMutation({
-    mutationFn: async ({
-      userId,
-      taskId,
-      data,
-    }: {
-      userId: string;
-      taskId: string;
-      data: Prisma.CommentCreateInput;
-    }) => {
-      return await createComment({ data, taskId, userId });
+  const createCommentMutation = useMutation({
+    mutationFn: async (data: Prisma.CommentCreateInput) => {
+      return await createComment(data);
     },
     onMutate: async (payload) => {
       await queryClient.cancelQueries({
-        queryKey: appKeys.getUserTask(userId),
+        queryKey: appKeys.getTaskComments(taskId),
       });
-      const previousTasks = await queryClient.getQueryData<
-        Prisma.TaskCreateInput[]
-      >(appKeys.getUserTask(userId));
+      const previousSubTasks = queryClient.getQueryData(
+        appKeys.getTaskComments(taskId)
+      );
       queryClient.setQueryData<Prisma.TaskCreateInput[]>(
-        appKeys.getUserTask(userId),
+        appKeys.getTaskComments(taskId),
         (old: any) => ({
           ...old,
-          ["data"]: old.data.map((task: Prisma.TaskCreateInput) =>
-            task.id === payload.taskId
-              ? {
-                  ...task,
-                  ["comments"]: [
-                    ...(task?.comments as Prisma.CommentCreateNestedManyWithoutTaskInput[]),
-                    payload.data,
-                  ],
-                }
-              : task
-          ),
+          ["comments"]: [payload, ...old.comments],
         })
       );
-      return { previousTasks };
+      return { previousSubTasks };
     },
     onError: (error, payload, context) => {
       queryClient.setQueryData(
-        appKeys.getUserTask(userId),
-        context?.previousTasks
+        appKeys.getTaskComments(taskId),
+        context?.previousSubTasks
       );
       console.log(error);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: appKeys.getUserTask(userId) });
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getTaskComments(taskId),
+      });
     },
   });
 
+  const deleteCommentMutation = useMutation({
+    mutationFn: async (commentId: string) => {
+      return await deleteComment(commentId);
+    },
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({
+        queryKey: appKeys.getTaskComments(taskId),
+      });
+      const previousSubTasks = queryClient.getQueryData(
+        appKeys.getTaskComments(taskId)
+      );
+      queryClient.setQueryData<Prisma.TaskCreateInput[]>(
+        appKeys.getTaskComments(taskId),
+        (old: any) => ({
+          ...old,
+          ["comments"]: old.comments.filter(
+            (comment: Prisma.CommentCreateInput) => comment.id === payload
+          ),
+        })
+      );
+      return { previousSubTasks };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(
+        appKeys.getTaskComments(taskId),
+        context?.previousSubTasks
+      );
+      console.log(error);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getTaskComments(taskId),
+      });
+    },
+  });
+
+  const updateCommentMutation = useMutation({
+    mutationFn: async ({
+      commentId,
+      data,
+    }: {
+      commentId: string;
+      data: Prisma.CommentCreateInput;
+    }) => {
+      return await updateComment({ commentId, data });
+    },
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({
+        queryKey: appKeys.getTaskComments(taskId),
+      });
+      const previousSubTasks = queryClient.getQueryData(
+        appKeys.getTaskComments(taskId)
+      );
+      queryClient.setQueryData<Prisma.TaskCreateInput[]>(
+        appKeys.getTaskComments(taskId),
+        (old: any) => ({
+          ...old,
+          ["comments"]: old.comments.map((comment: Prisma.CommentCreateInput) =>
+            comment.id === payload.commentId ? payload.data : comment
+          ),
+        })
+      );
+      return { previousSubTasks };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(
+        appKeys.getTaskComments(taskId),
+        context?.previousSubTasks
+      );
+      console.log(error);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getTaskComments(taskId),
+      });
+    },
+  });
+
+  const commentMutation = {
+    create: createCommentMutation,
+    delete: deleteCommentMutation,
+    update: updateCommentMutation,
+  };
+
   return {
-    isPending,
-    mutate,
+    commentMutation,
   };
 };

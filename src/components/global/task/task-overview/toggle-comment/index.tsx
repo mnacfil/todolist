@@ -1,24 +1,21 @@
 import CommentForm from "@/components/form/comment";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import clsx from "clsx";
 import { Paperclip } from "lucide-react";
 import React, { useState } from "react";
-import task from "../..";
-import { Prisma } from "@prisma/client";
 
 type Props = {
-  task: Prisma.TaskCreateInput;
+  taskId: string;
   userId: string;
 };
 
-const ToggleComment = ({ task, userId }: Props) => {
+const ToggleComment = ({ taskId, userId }: Props) => {
   const [isComment, setIsComment] = useState(false);
   return (
     <>
       {isComment ? (
         <CommentForm
           userId={userId}
-          taskId={task?.id ?? ""}
+          taskId={taskId}
           onCancel={() => setIsComment(false)}
         />
       ) : (
