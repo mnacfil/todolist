@@ -9,6 +9,7 @@ import clsx from "clsx";
 type Props = {
   iconName: keyof typeof dynamicIconImports;
   label: string;
+  description?: string;
   shortcut?: string;
   onClick?: () => void;
   color?: string;
@@ -17,17 +18,26 @@ type Props = {
 const MoreActionItem = ({
   iconName,
   label,
+  description,
   shortcut,
   color,
   onClick,
 }: Props) => {
   return (
-    <DropdownMenuItem onClick={onClick} className={color}>
-      <IconRenderer name={iconName} />
-      <span className={clsx("text-xs ", color ? color : "")}>{label}</span>
-      <DropdownMenuShortcut className="text-[10px] font-thin">
-        {shortcut}
-      </DropdownMenuShortcut>
+    <DropdownMenuItem
+      onClick={onClick}
+      className={`${color} flex flex-col w-full gap-1 items-start`}
+    >
+      <div className="flex gap-1">
+        <IconRenderer name={iconName} />
+        <span className={clsx("text-xs ", color ? color : "")}>{label}</span>
+        <DropdownMenuShortcut className="text-[10px] font-thin">
+          {shortcut}
+        </DropdownMenuShortcut>
+      </div>
+      {description && (
+        <p className="text-muted-foreground text-xs">{description}</p>
+      )}
     </DropdownMenuItem>
   );
 };
