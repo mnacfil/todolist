@@ -3,12 +3,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   getTaskOptions,
   getTotalTasksOptions,
+  getUserProjectsOptions,
 } from "@/lib/react-query/options";
+import { currentUser } from "@clerk/nextjs/server";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { redirect } from "next/navigation";
 
 type Props = {
   children: React.ReactNode;
@@ -16,10 +19,16 @@ type Props = {
 
 const AppLayout = async ({ children }: Props) => {
   const queryClient = new QueryClient();
+  const user = await currentUser();
+
+  if (!user) {
+    redirect("/login");
+  }
 
   // prefetch all tasks
   await queryClient.prefetchQuery(getTaskOptions);
   await queryClient.prefetchQuery(getTotalTasksOptions);
+  await queryClient.prefetchQuery(getUserProjectsOptions(user.id));
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

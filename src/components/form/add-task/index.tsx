@@ -81,9 +81,6 @@ const AddTaskForm = ({
   const [taskPriority, setTaskPriority] = useState<TaskPriority>("p4");
   const { isPending, isUpdating, mutate, updateMutate } = useTask(userId);
   const { subTaskMutation } = useSubTask(taskId ?? "");
-
-  console.log(taskId);
-
   const form = useForm<z.infer<typeof AddTaskFormSchema>>({
     resolver: zodResolver(AddTaskFormSchema),
     defaultValues: {

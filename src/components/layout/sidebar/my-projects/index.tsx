@@ -1,22 +1,27 @@
 "use client";
-
-import { projectsLinks } from "@/components/constants/sidebar";
-import MoreActions from "@/components/global/more-actions";
 import clsx from "clsx";
-import { Link, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { usePathname } from "next/navigation";
-import ProjectsAction from "./actions/projects";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
-import { PopoverContent } from "@radix-ui/react-popover";
-import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import AddProjectForm from "@/components/form/add-project";
 import { Separator } from "@/components/ui/separator";
+import { useQuery } from "@tanstack/react-query";
+import { getUserProjectsOptions } from "@/lib/react-query/options";
+import { useAuth } from "@clerk/nextjs";
+import Link from "next/link";
 
 type Props = {};
 
 const MyProjects = (props: Props) => {
   const pathname = usePathname();
+  const { userId } = useAuth();
+
+  const { isPending, data } = useQuery(
+    getUserProjectsOptions(userId as string)
+  );
+
+  console.log(data);
+
   return (
     <div className="mt-5 space-y-3">
       <div className="flex items-center justify-between">
@@ -40,44 +45,40 @@ const MyProjects = (props: Props) => {
         </Dialog>
       </div>
       <div className="flex flex-col w-full">
-        {projectsLinks.map((link) => {
-          const isActive = link.href === pathname;
-          return (
-            <Link
-              key={link.title}
-              href={link.href}
-              className={clsx(
-                `flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm`,
-                isActive ? "bg-orange-400/10" : "bg-none"
-              )}
-            >
-              <div className="flex items-center space-x-2">
-                <link.Icon
-                  className={clsx(
-                    "w-4 h-4 opacity-50",
-                    isActive && "text-red-700"
-                  )}
-                />
+        {data?.data &&
+          data.data.map((project) => {
+            const projectHref = `/app/project/${project.title}`;
+            const isActive = projectHref === pathname;
+            return (
+              <Link
+                key={project.id}
+                href={projectHref}
+                className={clsx(
+                  `flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm`,
+                  isActive ? "bg-orange-400/10" : "bg-none"
+                )}
+              >
+                <div className="flex items-center space-x-2">
+                  <p
+                    className={clsx(
+                      "text-primary text-sm",
+                      isActive && "text-red-800"
+                    )}
+                  >
+                    {project.title}
+                  </p>
+                </div>
                 <p
                   className={clsx(
-                    "text-primary text-sm",
+                    "text-muted-foreground/50 text-sm",
                     isActive && "text-red-800"
                   )}
                 >
-                  {link.title}
+                  3
                 </p>
-              </div>
-              <p
-                className={clsx(
-                  "text-muted-foreground/50 text-sm",
-                  isActive && "text-red-800"
-                )}
-              >
-                3
-              </p>
-            </Link>
-          );
-        })}
+              </Link>
+            );
+          })}
       </div>
     </div>
   );

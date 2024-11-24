@@ -22,11 +22,15 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
+import { useProject } from "@/hooks/project";
+import { useAuth } from "@clerk/nextjs";
 
 type Props = {};
 
 const AddProjectForm = (props: Props) => {
+  const { userId } = useAuth();
   const nameRef = useRef<HTMLInputElement>(null);
+  const { projectMutation } = useProject(userId as string);
   const form = useForm<z.infer<typeof AddProjectSchema>>({
     resolver: zodResolver(AddProjectSchema),
     mode: "onSubmit",
@@ -36,9 +40,25 @@ const AddProjectForm = (props: Props) => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof AddProjectSchema>) => {};
-
-  console.log(nameRef.current);
+  const onSubmit = (values: z.infer<typeof AddProjectSchema>) => {
+    try {
+      projectMutation.create.mutate({
+        userId: userId as string,
+        data: {
+          title: values.name,
+          author: {
+            connect: {
+              clerkId: userId as string,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      form.reset();
+    }
+  };
 
   return (
     <Form {...form}>
@@ -89,7 +109,9 @@ const AddProjectForm = (props: Props) => {
           )}
         />
         <div className="flex items-center gap-2 justify-end ">
-          <Button value={"ghost"}>Cancel</Button>
+          <Button value={"ghost"} type="button">
+            Cancel
+          </Button>
           <Button type="submit">Add</Button>
         </div>
       </form>
