@@ -59,3 +59,34 @@ export const getProjects = async (userId: string) => {
     };
   }
 };
+
+export const getProjectTasks = async (projectId: string) => {
+  if (!projectId) {
+    return {
+      status: 400,
+      message: "Invalid project",
+    };
+  }
+  try {
+    const projectTasks = await prisma.task.findMany({
+      where: {
+        projectId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return {
+      status: 200,
+      projectTasks,
+      message: "Successfully get project tasks",
+    };
+  } catch (error) {
+    return {
+      status: 400,
+      projectTasks: [],
+      message: "Something went wrong, Please try again later.",
+    };
+  }
+};

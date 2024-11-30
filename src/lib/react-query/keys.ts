@@ -8,4 +8,5 @@ export const appKeys = {
   getTaskComments: (taskId: string) =>
     [...appKeys.getTasks(), taskId, "comments"] as const,
   getUserProjects: (userId: string) => [userId, "projects"] as const,
+  getProjectTasks: (projectId: string) => [projectId, "tasks"] as const,
 };

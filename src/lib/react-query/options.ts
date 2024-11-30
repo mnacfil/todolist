@@ -6,7 +6,7 @@ import {
 } from "@/actions/task";
 import { queryOptions } from "@tanstack/react-query";
 import { appKeys } from "./keys";
-import { getProjects } from "@/actions/project";
+import { getProjects, getProjectTasks } from "@/actions/project";
 
 export const getTaskOptions = queryOptions({
   queryKey: appKeys.getTasks(),
@@ -38,4 +38,10 @@ export const getUserProjectsOptions = (userId: string) =>
   queryOptions({
     queryKey: appKeys.getUserProjects(userId),
     queryFn: async () => await getProjects(userId),
+  });
+
+export const getProjectTasksOptions = (projectId: string) =>
+  queryOptions({
+    queryKey: appKeys.getProjectTasks(projectId),
+    queryFn: async () => await getProjectTasks(projectId),
   });

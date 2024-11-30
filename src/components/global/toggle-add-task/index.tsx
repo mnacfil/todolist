@@ -7,10 +7,16 @@ import { PlusIcon } from "lucide-react";
 type Props = {
   userId: string;
   taskId?: string;
+  projectId?: string;
   type?: "main-task" | "sub-task";
 };
 
-const ToggleAddTask = ({ userId, taskId, type = "main-task" }: Props) => {
+const ToggleAddTask = ({
+  userId,
+  taskId,
+  projectId,
+  type = "main-task",
+}: Props) => {
   const [isAddingTask, setIsAddingTask] = useState(false);
 
   return (
@@ -19,6 +25,7 @@ const ToggleAddTask = ({ userId, taskId, type = "main-task" }: Props) => {
         <AddTaskForm
           userId={userId}
           taskId={taskId}
+          projectId={projectId}
           onCancel={() => setIsAddingTask(false)}
           type={type}
         />

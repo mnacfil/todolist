@@ -62,6 +62,7 @@ type Props = {
   userId: string;
   taskId?: string;
   isEditing?: boolean;
+  projectId?: string;
   currentTask?: Prisma.TaskCreateInput | SubTask;
   onCancel?: () => void;
   type?: "main-task" | "sub-task";
@@ -73,6 +74,7 @@ const AddTaskForm = ({
   isEditing = false,
   userId,
   taskId,
+  projectId,
   currentTask,
   onCancel,
   type = "main-task",
@@ -144,6 +146,11 @@ const AddTaskForm = ({
             author: {
               connect: {
                 clerkId: userId,
+              },
+            },
+            Project: {
+              connect: {
+                id: projectId ?? "",
               },
             },
           });

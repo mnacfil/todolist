@@ -1,4 +1,8 @@
-import React from "react";
+"use client";
+
+import ToggleAddTask from "@/components/global/toggle-add-task";
+import { useAuth } from "@clerk/nextjs";
+import Project from "./_components/project";
 
 type Props = {
   params: {
@@ -7,12 +11,20 @@ type Props = {
   searchParams: Record<string, string>;
 };
 
-const page = ({ params }: Props) => {
+const ProjectPage = ({ params }: Props) => {
+  const { userId } = useAuth();
+  const projectId = params.id.split("-").slice(-5).join("-");
+
+  if (!userId) {
+    return null;
+  }
+
   return (
-    <div>
-      <h1>{params.id}</h1>
-    </div>
+    <>
+      <Project projectId={projectId} userId={userId} />
+      <ToggleAddTask userId={userId} projectId={projectId} />
+    </>
   );
 };
 
-export default page;
+export default ProjectPage;
