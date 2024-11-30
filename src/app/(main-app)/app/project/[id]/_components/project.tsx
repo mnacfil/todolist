@@ -14,7 +14,6 @@ const Project = ({ projectId, userId }: Props) => {
   if (isPending) {
     return <p>loading...</p>;
   }
-  console.log(data);
 
   return (
     <>

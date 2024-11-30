@@ -8,7 +8,7 @@ export const sidebarLinks = [
   },
   {
     Icon: Calendar,
-    href: "/",
+    href: "/app",
     title: "Today",
   },
   {

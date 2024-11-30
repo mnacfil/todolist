@@ -57,6 +57,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { priorities } from "@/components/constants";
 import { Card } from "@/components/ui/card";
+import { useProjectTask } from "@/hooks/project";
 
 type Props = {
   userId: string;
@@ -82,6 +83,7 @@ const AddTaskForm = ({
   const pathname = usePathname();
   const [taskPriority, setTaskPriority] = useState<TaskPriority>("p4");
   const { isPending, isUpdating, mutate, updateMutate } = useTask(userId);
+  const { createProjectTaskMutation } = useProjectTask(projectId ?? "");
   const { subTaskMutation } = useSubTask(taskId ?? "");
   const form = useForm<z.infer<typeof AddTaskFormSchema>>({
     resolver: zodResolver(AddTaskFormSchema),
@@ -95,6 +97,8 @@ const AddTaskForm = ({
       priority: "",
     },
   });
+
+  const isProjectRoute = pathname.includes("/app/project");
 
   const onSubmit = async (values: z.infer<typeof AddTaskFormSchema>) => {
     try {
@@ -141,19 +145,30 @@ const AddTaskForm = ({
             });
           }
         } else {
-          mutate({
-            ...values,
-            author: {
-              connect: {
-                clerkId: userId,
+          if (isProjectRoute) {
+            createProjectTaskMutation.mutate({
+              ...values,
+              author: {
+                connect: {
+                  clerkId: userId,
+                },
               },
-            },
-            Project: {
-              connect: {
-                id: projectId ?? "",
+              Project: {
+                connect: {
+                  id: projectId ?? "",
+                },
               },
-            },
-          });
+            });
+          } else {
+            mutate({
+              ...values,
+              author: {
+                connect: {
+                  clerkId: userId,
+                },
+              },
+            });
+          }
         }
       }
     } catch (error) {
