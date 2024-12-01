@@ -83,7 +83,7 @@ const MyProjects = (props: Props) => {
                     isActive && "text-red-800"
                   )}
                 >
-                  3
+                  {project?._count?.tasks ?? 0}
                 </p>
               </Link>
             );

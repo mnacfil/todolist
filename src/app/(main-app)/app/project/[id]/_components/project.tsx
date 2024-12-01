@@ -5,7 +5,6 @@ import ToggleAddTask from "@/components/global/toggle-add-task";
 import { getProjectTasksOptions } from "@/lib/react-query/options";
 import { useAuth } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 
 type Props = {
   projectId: string;

@@ -90,7 +90,7 @@ export const useProjectTask = (projectId: string) => {
         });
       }
       queryClient.invalidateQueries({
-        queryKey: appKeys.getProjectTasks(projectId),
+        queryKey: [appKeys.userProject],
       });
     },
   });
@@ -137,7 +137,7 @@ export const useProjectTask = (projectId: string) => {
         });
       }
       queryClient.invalidateQueries({
-        queryKey: appKeys.getProjectTasks(projectId),
+        queryKey: [appKeys.userProject],
       });
     },
   });

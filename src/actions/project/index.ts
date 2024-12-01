@@ -40,7 +40,13 @@ export const getProjects = async (userId: string) => {
           clerkId: userId,
         },
       },
-
+      include: {
+        _count: {
+          select: {
+            tasks: true,
+          },
+        },
+      },
       orderBy: { createdAt: "desc" },
     });
 
