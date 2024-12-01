@@ -22,6 +22,8 @@ import {
   getTaskCommentsOptions,
   getTaskSubTasksOptions,
 } from "@/lib/react-query/options";
+import { useProjectTask } from "@/hooks/project";
+import { usePathname } from "next/navigation";
 
 export enum TaskType {
   MAIN_TASK,
@@ -31,16 +33,20 @@ export enum TaskType {
 type Props = {
   task: any;
   userId: string;
-  type?: TaskType;
+  projectId?: string;
 };
 
 const TaskOverview = dynamic(() => import("./task-overview"));
 
-const Task = ({ task, userId, type }: Props) => {
+const Task = ({ task, userId, projectId }: Props) => {
+  const pathname = usePathname();
   const queryClient = useQueryClient();
   const { deleteMutate } = useTask(userId);
+  const { deleteProjectTaskMutation } = useProjectTask(projectId ?? "");
   const [isEditing, setIsEditing] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+
+  const isProjectRoute = pathname.includes("/app/project");
 
   const onCancelTask = () => setIsEditing(false);
   const onEditTask = () => setIsEditing(true);
@@ -50,6 +56,7 @@ const Task = ({ task, userId, type }: Props) => {
       {isEditing ? (
         <AddTaskForm
           userId={userId}
+          projectId={projectId}
           currentTask={task}
           isEditing={isEditing}
           onCancel={onCancelTask}
@@ -63,7 +70,13 @@ const Task = ({ task, userId, type }: Props) => {
                   <Checkbox
                     id="taskCheckbox"
                     className="rounded-full text-gray-500!"
-                    onCheckedChange={() => deleteMutate(task?.id as string)}
+                    onCheckedChange={() => {
+                      if (isProjectRoute) {
+                        deleteProjectTaskMutation.mutate(task?.id as string);
+                      } else {
+                        deleteMutate(task?.id as string);
+                      }
+                    }}
                     color="red"
                   />
                 </Label>

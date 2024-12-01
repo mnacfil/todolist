@@ -12,17 +12,11 @@ type Props = {
 };
 
 const ProjectPage = ({ params }: Props) => {
-  const { userId } = useAuth();
   const projectId = params.id.split("-").slice(-5).join("-");
-
-  if (!userId) {
-    return null;
-  }
 
   return (
     <>
-      <Project projectId={projectId} userId={userId} />
-      <ToggleAddTask userId={userId} projectId={projectId} />
+      <Project projectId={projectId} />
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { createProject } from "@/actions/project";
-import { createTask } from "@/actions/task";
+import { createTask, deleteTask } from "@/actions/task";
 import { appKeys } from "@/lib/react-query/keys";
 import { Prisma } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -82,7 +82,54 @@ export const useProjectTask = (projectId: string) => {
     onSettled: (res) => {
       if (res?.status === 201) {
         toast("Success", {
-          description: res?.message || "Succesfully added on your list.",
+          description: res?.message || "Task completed",
+        });
+      } else {
+        toast("Error", {
+          description: res?.message || "Something went wrong.",
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getProjectTasks(projectId),
+      });
+    },
+  });
+
+  const deleteProjectTaskMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return await deleteTask(id);
+    },
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({
+        queryKey: appKeys.getProjectTasks(projectId),
+      });
+      const previousTask = queryClient.getQueryData<Prisma.TaskCreateInput[]>(
+        appKeys.getProjectTasks(projectId)
+      );
+      console.log(projectId);
+
+      queryClient.setQueryData<Prisma.TaskCreateInput[]>(
+        appKeys.getProjectTasks(projectId),
+        (old: any) => ({
+          ...old,
+          ["projectTasks"]: old?.projectTasks.filter(
+            (task: Prisma.TaskCreateInput) => task.id !== id
+          ),
+        })
+      );
+      return { previousTask };
+    },
+    onError: (error, newTask, context) => {
+      queryClient.setQueryData(
+        appKeys.getProjectTasks(projectId),
+        context?.previousTask
+      );
+      console.log(error);
+    },
+    onSettled: (res) => {
+      if (res?.status === 200) {
+        toast("Success", {
+          description: res?.message || "Task completed.",
         });
       } else {
         toast("Error", {
@@ -97,6 +144,7 @@ export const useProjectTask = (projectId: string) => {
 
   return {
     createProjectTaskMutation,
+    deleteProjectTaskMutation,
     // updateProjectTaskMutation
     // deleteProjectTaskMutation
   };
