@@ -45,3 +45,4 @@ export const getProjectTasksOptions = (projectId: string) =>
     queryKey: appKeys.getProjectTasks(projectId),
     queryFn: async () => await getProjectTasks(projectId),
   });
+// options for sections actions

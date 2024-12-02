@@ -1,8 +1,5 @@
-"use client";
-
-import ToggleAddTask from "@/components/global/toggle-add-task";
-import { useAuth } from "@clerk/nextjs";
 import Project from "./_components/project";
+import ToggleAddSection from "@/components/global/toggle-add-section";
 
 type Props = {
   params: {
@@ -17,6 +14,7 @@ const ProjectPage = ({ params }: Props) => {
   return (
     <>
       <Project projectId={projectId} />
+      <ToggleAddSection />
     </>
   );
 };
