@@ -7,6 +7,7 @@ import {
 import { queryOptions } from "@tanstack/react-query";
 import { appKeys } from "./keys";
 import { getProjects, getProjectTasks } from "@/actions/project";
+import { getProjectSections } from "@/actions/section";
 
 export const getTaskOptions = queryOptions({
   queryKey: appKeys.getTasks(),
@@ -45,4 +46,9 @@ export const getProjectTasksOptions = (projectId: string) =>
     queryKey: appKeys.getProjectTasks(projectId),
     queryFn: async () => await getProjectTasks(projectId),
   });
-// options for sections actions
+
+export const getProjectSectionsOptions = (projectId: string) =>
+  queryOptions({
+    queryKey: appKeys.getProjectSections(projectId),
+    queryFn: async () => await getProjectSections(projectId),
+  });

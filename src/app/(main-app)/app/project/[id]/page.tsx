@@ -1,5 +1,6 @@
 import Project from "./_components/project";
 import ToggleAddSection from "@/components/global/toggle-add-section";
+import Sections from "./_components/sections";
 
 type Props = {
   params: {
@@ -14,7 +15,8 @@ const ProjectPage = ({ params }: Props) => {
   return (
     <>
       <Project projectId={projectId} />
-      <ToggleAddSection />
+      <Sections projectId={projectId} />
+      <ToggleAddSection projectId={projectId} />
     </>
   );
 };

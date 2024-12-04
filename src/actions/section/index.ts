@@ -74,11 +74,12 @@ export const updateSection = async ({
   }
 };
 
-export const getAllSections = async (projectId: string) => {
+export const getProjectSections = async (projectId: string) => {
   if (!projectId) {
     return {
       data: [],
       message: "Empty sections",
+      status: 400,
     };
   }
   try {
@@ -92,10 +93,12 @@ export const getAllSections = async (projectId: string) => {
     });
     return {
       data: sections,
+      status: 200,
       message: "Successfully get all sections.",
     };
   } catch (error) {
     return {
+      data: null,
       status: 404,
       message: "Something went wrong, Please try again later",
     };

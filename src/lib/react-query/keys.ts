@@ -12,5 +12,6 @@ export const appKeys = {
     [appKeys.userProject, userId, "projects"] as const,
   getProjectTasks: (projectId: string) =>
     [appKeys.userProject, projectId, "tasks"] as const,
+  getProjectSections: (projectId: string) =>
+    ["project", projectId, "sections"] as const,
 };
-// keys for sections actions

@@ -13,12 +13,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
+import { useSection } from "@/hooks/section";
 
 type Props = {
+  projectId: string;
   onCancel: () => void;
 };
 
-const SectionForm = ({ onCancel }: Props) => {
+const SectionForm = ({ projectId, onCancel }: Props) => {
+  const { create } = useSection(projectId ?? "");
   const form = useForm<z.infer<typeof SectionSchema>>({
     mode: "onSubmit",
     defaultValues: {
@@ -28,7 +31,15 @@ const SectionForm = ({ onCancel }: Props) => {
   });
 
   const onSubmit = (values: z.infer<typeof SectionSchema>) => {
-    console.log(values);
+    create.mutate({
+      title: values.name,
+      Project: {
+        connect: {
+          id: projectId,
+        },
+      },
+    });
+    form.reset();
   };
 
   return (
@@ -59,6 +70,8 @@ const SectionForm = ({ onCancel }: Props) => {
               }
             )}`}
             size={"sm"}
+            disabled={form.getValues("name").length === 0}
+            aria-disabled={form.getValues("name").length === 0}
           >
             Add section
           </Button>

@@ -26,7 +26,7 @@ const HideAndShow = ({ children, label, subLabel }: Props) => {
         onClick={() => setOpen((prev) => !prev)}
       />
       <div
-        className={`flex flex-col w-full transition-all ${clsx({
+        className={`flex flex-1 flex-col w-full transition-all ${clsx({
           "gap-2": !open,
         })}`}
       >
@@ -40,6 +40,7 @@ const HideAndShow = ({ children, label, subLabel }: Props) => {
         {open && children}
         {!open && <Separator />}
       </div>
+      <div>action</div>
     </div>
   );
 };
