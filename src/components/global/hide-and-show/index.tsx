@@ -28,7 +28,7 @@ const HideAndShow = ({
       <div className="flex gap-2 w-full">
         <ChevronRight
           size={18}
-          className={`cursor-pointer text-gray-500 transition-all mt-[2.5px] ${clsx(
+          className={`cursor-pointer text-gray-500 transition-all mt-[1.5px] ${clsx(
             {
               "rotate-90": open,
             }
@@ -45,7 +45,7 @@ const HideAndShow = ({
               )}`}
               onClick={() => setOpen((prev) => !prev)}
             >
-              <p className="text-xs">{label} </p>
+              <p className="text-xs font-semibold">{label} </p>
               <span className="text-muted-foreground text-[10px]">
                 {subLabel}
               </span>

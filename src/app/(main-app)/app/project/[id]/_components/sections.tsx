@@ -4,6 +4,8 @@ import HideAndShow from "@/components/global/hide-and-show";
 import { getProjectSectionsOptions } from "@/lib/react-query/options";
 import { useQuery } from "@tanstack/react-query";
 import SectionActions from "./section-actions";
+import ToggleAddTask from "@/components/global/toggle-add-task";
+import Task from "@/components/global/task";
 
 type Props = {
   projectId: string;
@@ -39,7 +41,15 @@ const Sections = ({ projectId }: Props) => {
                 />
               }
             >
-              task here
+              <div className="flex w-full gap-4 flex-col divide-y divide-slate-100">
+                {section?.tasks &&
+                  section.tasks.map((task) => (
+                    <Task key={task.id} task={task} userId={""} />
+                  ))}
+              </div>
+              <div className="py-2">
+                <ToggleAddTask userId="" />
+              </div>
             </HideAndShow>
           ))}
         </div>
