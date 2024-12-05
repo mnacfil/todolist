@@ -3,6 +3,7 @@
 import HideAndShow from "@/components/global/hide-and-show";
 import { getProjectSectionsOptions } from "@/lib/react-query/options";
 import { useQuery } from "@tanstack/react-query";
+import SectionActions from "./section-actions";
 
 type Props = {
   projectId: string;
@@ -24,7 +25,19 @@ const Sections = ({ projectId }: Props) => {
             <HideAndShow
               key={section.id}
               label={section.title}
-              subLabel={section.tasks.length.toString() ?? "0"}
+              subLabel={section?.tasks?.length.toString() ?? "0"}
+              hasActions={true}
+              Actions={
+                <SectionActions
+                  onArchive={() => {}}
+                  onCopyLink={() => {}}
+                  onDelete={() => {}}
+                  onDuplicate={() => {}}
+                  onEdit={() => {}}
+                  onMove={() => {}}
+                  key={`${section.id}-actions`}
+                />
+              }
             >
               task here
             </HideAndShow>
