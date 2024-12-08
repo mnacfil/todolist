@@ -34,9 +34,9 @@ model Task {
   labels      String?
   subTasks    SubTask[]
   comments    Comment[]
-  Project     Project?  @relation(fields: [projectId], references: [id])
+  Project     Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId   String?
-  Section     Section?  @relation(fields: [sectionId], references: [id])
+  Section     Section?  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
   sectionId   String?
 }
 
