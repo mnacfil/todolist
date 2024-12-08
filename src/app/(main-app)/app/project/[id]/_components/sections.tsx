@@ -50,7 +50,14 @@ const Sections = ({ projectId }: Props) => {
               <div className="flex w-full gap-2 flex-col divide-y divide-slate-100">
                 {section?.tasks &&
                   section.tasks.map((task) => (
-                    <Task key={task.id} task={task} userId={userId} />
+                    <Task
+                      key={task.id}
+                      task={task}
+                      userId={userId}
+                      sectionId={section.id}
+                      projectId={projectId}
+                      place={TaskPlace.SECTION}
+                    />
                   ))}
                 <div className="py-3">
                   <ToggleAddTask

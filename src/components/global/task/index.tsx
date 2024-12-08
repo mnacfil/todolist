@@ -11,7 +11,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Calendar, Edit2, Inbox, InboxIcon, MessageSquare } from "lucide-react";
 import React, { useOptimistic, useState } from "react";
-import AddTaskForm from "@/components/form/add-task";
+import AddTaskForm, { TaskPlace } from "@/components/form/add-task";
 import { useTask } from "@/hooks/task";
 import { Separator } from "@radix-ui/react-separator";
 import dynamic from "next/dynamic";
@@ -23,7 +23,7 @@ import {
   getTaskSubTasksOptions,
 } from "@/lib/react-query/options";
 import { useProjectTask } from "@/hooks/project";
-import { usePathname } from "next/navigation";
+import { useSectionTask } from "@/hooks/section";
 
 export enum TaskType {
   MAIN_TASK,
@@ -34,19 +34,28 @@ type Props = {
   task: any;
   userId: string;
   projectId?: string;
+  sectionId?: string;
+  place?: TaskPlace;
 };
 
 const TaskOverview = dynamic(() => import("./task-overview"));
 
-const Task = ({ task, userId, projectId }: Props) => {
-  const pathname = usePathname();
+const Task = ({
+  task,
+  userId,
+  projectId,
+  sectionId,
+  place = TaskPlace.MAIN,
+}: Props) => {
   const queryClient = useQueryClient();
   const { deleteMutate } = useTask(userId);
   const { deleteProjectTaskMutation } = useProjectTask(projectId ?? "");
+  const { deleteSectionTaskMutation } = useSectionTask(
+    projectId ?? "",
+    sectionId ?? ""
+  );
   const [isEditing, setIsEditing] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
-
-  const isProjectRoute = pathname.includes("/app/project");
 
   const onCancelTask = () => setIsEditing(false);
   const onEditTask = () => setIsEditing(true);
@@ -57,9 +66,11 @@ const Task = ({ task, userId, projectId }: Props) => {
         <AddTaskForm
           userId={userId}
           projectId={projectId}
+          sectionId={sectionId}
           currentTask={task}
           isEditing={isEditing}
           onCancel={onCancelTask}
+          place={place}
         />
       ) : (
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -71,10 +82,17 @@ const Task = ({ task, userId, projectId }: Props) => {
                     id="taskCheckbox"
                     className="rounded-full text-gray-500!"
                     onCheckedChange={() => {
-                      if (isProjectRoute) {
-                        deleteProjectTaskMutation.mutate(task?.id as string);
-                      } else {
+                      if (place === TaskPlace.MAIN) {
                         deleteMutate(task?.id as string);
+                      }
+                      if (place === TaskPlace.PROJECT) {
+                        deleteProjectTaskMutation.mutate(task?.id as string);
+                      }
+                      if (place === TaskPlace.SECTION) {
+                        deleteSectionTaskMutation.mutate({
+                          id: task?.id as string,
+                          sectionId: sectionId ?? "",
+                        });
                       }
                     }}
                     color="red"

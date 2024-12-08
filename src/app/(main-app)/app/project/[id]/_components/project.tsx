@@ -32,6 +32,7 @@ const Project = ({ projectId }: Props) => {
                 task={task}
                 userId={userId}
                 projectId={projectId}
+                place={TaskPlace.PROJECT}
               />
             ))}
           </div>
