@@ -58,15 +58,24 @@ import {
 import { priorities } from "@/components/constants";
 import { Card } from "@/components/ui/card";
 import { useProjectTask } from "@/hooks/project";
+import { useSectionTask } from "@/hooks/section";
+
+export enum TaskPlace {
+  MAIN = "main",
+  PROJECT = "project",
+  SECTION = "section",
+}
 
 type Props = {
   userId: string;
   taskId?: string;
   isEditing?: boolean;
   projectId?: string;
+  sectionId?: string;
   currentTask?: Prisma.TaskCreateInput | SubTask;
   onCancel?: () => void;
   type?: "main-task" | "sub-task";
+  place?: TaskPlace;
 };
 
 type TaskPriority = "p1" | "p2" | "p3" | "p4";
@@ -76,14 +85,16 @@ const AddTaskForm = ({
   userId,
   taskId,
   projectId,
+  sectionId,
   currentTask,
   onCancel,
   type = "main-task",
+  place = TaskPlace.MAIN,
 }: Props) => {
-  const pathname = usePathname();
   const [taskPriority, setTaskPriority] = useState<TaskPriority>("p4");
   const { isPending, isUpdating, mutate, updateMutate } = useTask(userId);
   const { createProjectTaskMutation } = useProjectTask(projectId ?? "");
+  const { createSectionTaskMutation } = useSectionTask(projectId ?? "");
   const { subTaskMutation } = useSubTask(taskId ?? "");
   const form = useForm<z.infer<typeof AddTaskFormSchema>>({
     resolver: zodResolver(AddTaskFormSchema),
@@ -97,9 +108,6 @@ const AddTaskForm = ({
       priority: "",
     },
   });
-
-  const isProjectRoute = pathname.includes("/app/project");
-
   const onSubmit = async (values: z.infer<typeof AddTaskFormSchema>) => {
     try {
       if (type === "sub-task") {
@@ -145,7 +153,7 @@ const AddTaskForm = ({
             });
           }
         } else {
-          if (isProjectRoute) {
+          if (place === TaskPlace.PROJECT && projectId) {
             createProjectTaskMutation.mutate({
               ...values,
               author: {
@@ -156,6 +164,21 @@ const AddTaskForm = ({
               Project: {
                 connect: {
                   id: projectId ?? "",
+                },
+              },
+            });
+          }
+          if (place === TaskPlace.SECTION && sectionId && projectId) {
+            createSectionTaskMutation.mutate({
+              ...values,
+              author: {
+                connect: {
+                  clerkId: userId,
+                },
+              },
+              Section: {
+                connect: {
+                  id: sectionId ?? "",
                 },
               },
             });

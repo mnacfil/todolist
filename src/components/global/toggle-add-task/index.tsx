@@ -1,20 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
-import AddTaskForm from "@/components/form/add-task";
+import AddTaskForm, { TaskPlace } from "@/components/form/add-task";
 import { PlusIcon } from "lucide-react";
 
 type Props = {
   userId: string;
   taskId?: string;
   projectId?: string;
+  sectionId?: string;
   type?: "main-task" | "sub-task";
+  place?: TaskPlace;
 };
 
 const ToggleAddTask = ({
   userId,
   taskId,
   projectId,
+  sectionId,
+  place = TaskPlace.MAIN,
   type = "main-task",
 }: Props) => {
   const [isAddingTask, setIsAddingTask] = useState(false);
@@ -26,6 +30,8 @@ const ToggleAddTask = ({
           userId={userId}
           taskId={taskId}
           projectId={projectId}
+          sectionId={sectionId}
+          place={place}
           onCancel={() => setIsAddingTask(false)}
           type={type}
         />

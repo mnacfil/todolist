@@ -6,6 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import SectionActions from "./section-actions";
 import ToggleAddTask from "@/components/global/toggle-add-task";
 import Task from "@/components/global/task";
+import { useAuth } from "@clerk/nextjs";
+import { TaskPlace } from "@/components/form/add-task";
 
 type Props = {
   projectId: string;
@@ -16,9 +18,13 @@ const Sections = ({ projectId }: Props) => {
     getProjectSectionsOptions(projectId ?? "")
   );
 
+  const { userId } = useAuth();
+  if (!userId) return;
+
   if (isPending) {
     return <p>Loading sections...</p>;
   }
+
   return (
     <div>
       {data?.data && data.data.length > 0 ? (
@@ -41,15 +47,26 @@ const Sections = ({ projectId }: Props) => {
                 />
               }
             >
-              <div className="flex w-full gap-4 flex-col divide-y divide-slate-100">
+              <div className="flex w-full gap-2 flex-col divide-y divide-slate-100">
                 {section?.tasks &&
                   section.tasks.map((task) => (
-                    <Task key={task.id} task={task} userId={""} />
+                    <Task key={task.id} task={task} userId={userId} />
                   ))}
+                <ToggleAddTask
+                  userId={userId}
+                  sectionId={section.id}
+                  projectId={projectId}
+                  place={TaskPlace.SECTION}
+                />
               </div>
-              <div className="py-2">
-                <ToggleAddTask userId="" />
-              </div>
+              {/* <div className="py-2">
+                <ToggleAddTask
+                  userId={userId}
+                  sectionId={section.id}
+                  projectId={projectId}
+                  place={TaskPlace.SECTION}
+                />
+              </div> */}
             </HideAndShow>
           ))}
         </div>

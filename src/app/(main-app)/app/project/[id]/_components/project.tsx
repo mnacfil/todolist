@@ -1,5 +1,6 @@
 "use client";
 
+import { TaskPlace } from "@/components/form/add-task";
 import Task from "@/components/global/task";
 import ToggleAddTask from "@/components/global/toggle-add-task";
 import { getProjectTasksOptions } from "@/lib/react-query/options";
@@ -34,7 +35,11 @@ const Project = ({ projectId }: Props) => {
               />
             ))}
           </div>
-          <ToggleAddTask userId={userId} projectId={projectId} />
+          <ToggleAddTask
+            userId={userId}
+            projectId={projectId}
+            place={TaskPlace.PROJECT}
+          />
         </>
       ) : (
         <div>

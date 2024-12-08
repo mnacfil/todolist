@@ -104,3 +104,35 @@ export const getProjectSections = async (projectId: string) => {
     };
   }
 };
+
+export const getSectionTasks = async (sectionId: string) => {
+  if (!sectionId) {
+    return {
+      data: [],
+      message: "Empty sections",
+      status: 400,
+    };
+  }
+  try {
+    const sectionTasks = await prisma.task.findMany({
+      where: {
+        sectionId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return {
+      data: sectionTasks,
+      status: 200,
+      message: "Successfully get all section tasks.",
+    };
+  } catch (error) {
+    return {
+      data: null,
+      status: 404,
+      message: "Something went wrong, Please try again later",
+    };
+  }
+};
