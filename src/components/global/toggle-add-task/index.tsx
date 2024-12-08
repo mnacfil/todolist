@@ -37,7 +37,7 @@ const ToggleAddTask = ({
         />
       ) : (
         <div
-          className="flex items-center gap-1 cursor-pointer group"
+          className="flex items-center gap-1 cursor-pointer group pl-1.5"
           onClick={() => setIsAddingTask(true)}
         >
           <PlusIcon

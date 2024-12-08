@@ -52,21 +52,15 @@ const Sections = ({ projectId }: Props) => {
                   section.tasks.map((task) => (
                     <Task key={task.id} task={task} userId={userId} />
                   ))}
-                <ToggleAddTask
-                  userId={userId}
-                  sectionId={section.id}
-                  projectId={projectId}
-                  place={TaskPlace.SECTION}
-                />
+                <div className="py-3">
+                  <ToggleAddTask
+                    userId={userId}
+                    sectionId={section.id}
+                    projectId={projectId}
+                    place={TaskPlace.SECTION}
+                  />
+                </div>
               </div>
-              {/* <div className="py-2">
-                <ToggleAddTask
-                  userId={userId}
-                  sectionId={section.id}
-                  projectId={projectId}
-                  place={TaskPlace.SECTION}
-                />
-              </div> */}
             </HideAndShow>
           ))}
         </div>

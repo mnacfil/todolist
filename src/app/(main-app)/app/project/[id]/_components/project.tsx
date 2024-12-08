@@ -43,7 +43,11 @@ const Project = ({ projectId }: Props) => {
         </>
       ) : (
         <div>
-          <ToggleAddTask userId={userId} projectId={projectId} />
+          <ToggleAddTask
+            userId={userId}
+            projectId={projectId}
+            place={TaskPlace.PROJECT}
+          />
           <div className="flex items-center justify-center flex-col min-h-60">
             <h2 className="text-md">Your peace of mind is priceless</h2>
             <p className="text-gray-600 text-sm">

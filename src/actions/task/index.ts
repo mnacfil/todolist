@@ -7,7 +7,14 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export const getTasks = async () => {
   try {
+    // for now get all task where section id and project id is null/empty
     const tasks = await prisma.task.findMany({
+      where: {
+        sectionId: null,
+        AND: {
+          projectId: null,
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },

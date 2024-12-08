@@ -24,7 +24,7 @@ export const useSection = (projectId: string) => {
         appKeys.getProjectSections(projectId),
         (old: Awaited<ReturnType<typeof getProjectSections>>) => ({
           ...old,
-          ["data"]: [payload, ...(old?.data ?? [])],
+          ["data"]: [...(old?.data ?? []), payload],
         })
       );
 
@@ -58,14 +58,20 @@ export const useSection = (projectId: string) => {
   };
 };
 
-export const useSectionTask = (projectId: string) => {
+export const useSectionTask = (projectId: string, sectionId: string) => {
   const queryClient = useQueryClient();
 
   const createSectionTaskMutation = useMutation({
-    mutationFn: async (data: Prisma.TaskCreateInput) => {
+    mutationFn: async ({
+      data,
+      sectionId,
+    }: {
+      sectionId: String;
+      data: Prisma.TaskCreateInput;
+    }) => {
       return await createTask({ data });
     },
-    onMutate: async (newTask) => {
+    onMutate: async (payload) => {
       await queryClient.cancelQueries({
         queryKey: appKeys.getProjectSections(projectId),
       });
@@ -76,7 +82,15 @@ export const useSectionTask = (projectId: string) => {
         appKeys.getProjectSections(projectId),
         (old: Awaited<ReturnType<typeof getProjectSections>>) => ({
           ...old,
-          ["data"]: [newTask, ...old.data!],
+          ["data"]: old.data!.map((section) => {
+            if (section.id === payload.sectionId) {
+              return {
+                ...section,
+                tasks: [...section.tasks, payload.data],
+              };
+            }
+            return section;
+          }),
         })
       );
       return { previousTask };

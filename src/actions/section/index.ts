@@ -88,7 +88,11 @@ export const getProjectSections = async (projectId: string) => {
         projectId,
       },
       include: {
-        tasks: true,
+        tasks: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
       },
     });
     return {

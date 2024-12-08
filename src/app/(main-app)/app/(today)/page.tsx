@@ -1,5 +1,3 @@
-import { CircleCheckBigIcon } from "lucide-react";
-import { getTotalTasks } from "@/actions/task";
 import Today from "./_components/today";
 
 // Todo

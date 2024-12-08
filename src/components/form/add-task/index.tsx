@@ -94,7 +94,10 @@ const AddTaskForm = ({
   const [taskPriority, setTaskPriority] = useState<TaskPriority>("p4");
   const { isPending, isUpdating, mutate, updateMutate } = useTask(userId);
   const { createProjectTaskMutation } = useProjectTask(projectId ?? "");
-  const { createSectionTaskMutation } = useSectionTask(projectId ?? "");
+  const { createSectionTaskMutation } = useSectionTask(
+    projectId ?? "",
+    sectionId ?? ""
+  );
   const { subTaskMutation } = useSubTask(taskId ?? "");
   const form = useForm<z.infer<typeof AddTaskFormSchema>>({
     resolver: zodResolver(AddTaskFormSchema),
@@ -170,19 +173,23 @@ const AddTaskForm = ({
           }
           if (place === TaskPlace.SECTION && sectionId && projectId) {
             createSectionTaskMutation.mutate({
-              ...values,
-              author: {
-                connect: {
-                  clerkId: userId,
+              sectionId,
+              data: {
+                ...values,
+                author: {
+                  connect: {
+                    clerkId: userId,
+                  },
                 },
-              },
-              Section: {
-                connect: {
-                  id: sectionId ?? "",
+                Section: {
+                  connect: {
+                    id: sectionId ?? "",
+                  },
                 },
               },
             });
-          } else {
+          }
+          if (place === TaskPlace.MAIN) {
             mutate({
               ...values,
               author: {
