@@ -93,7 +93,8 @@ const AddTaskForm = ({
 }: Props) => {
   const [taskPriority, setTaskPriority] = useState<TaskPriority>("p4");
   const { isPending, isUpdating, mutate, updateMutate } = useTask(userId);
-  const { createProjectTaskMutation } = useProjectTask(projectId ?? "");
+  const { createProjectTaskMutation, updateProjectTaskMutation } =
+    useProjectTask(projectId ?? "");
   const { createSectionTaskMutation, updateSectionTaskMutation } =
     useSectionTask(projectId ?? "", sectionId ?? "");
   const { subTaskMutation } = useSubTask(taskId ?? "");
@@ -155,7 +156,18 @@ const AddTaskForm = ({
               });
             }
             if (place === TaskPlace.PROJECT && projectId) {
-              //
+              updateProjectTaskMutation.mutate({
+                id: currentTask?.id,
+                data: {
+                  ...values,
+                  author: {
+                    connect: { clerkId: userId },
+                  },
+                  Project: {
+                    connect: { id: projectId },
+                  },
+                },
+              });
             }
             if (place === TaskPlace.SECTION && sectionId) {
               updateSectionTaskMutation.mutate({

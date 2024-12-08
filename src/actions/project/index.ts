@@ -66,6 +66,73 @@ export const getProjects = async (userId: string) => {
   }
 };
 
+export const deleteProject = async (projectId: string) => {
+  if (!projectId) {
+    return {
+      status: 400,
+      message: "No project id provided",
+      data: null,
+    };
+  }
+  try {
+    const deleted = await prisma.project.delete({
+      where: {
+        id: projectId,
+      },
+    });
+
+    return {
+      status: 200,
+      data: deleted,
+      message: "Project deleted.",
+    };
+  } catch (error) {
+    return {
+      status: 404,
+      message: "Something went wrong, Please try again later.",
+      data: null,
+    };
+  }
+};
+
+export const updateProject = async ({
+  projectId,
+  title,
+}: {
+  projectId: string;
+  title: string;
+}) => {
+  if (!projectId) {
+    return {
+      status: 400,
+      message: "No project id provided",
+      data: null,
+    };
+  }
+  try {
+    const updatedProject = await prisma.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        title,
+      },
+    });
+
+    return {
+      status: 200,
+      message: "Project title updated.",
+      data: updatedProject,
+    };
+  } catch (error) {
+    return {
+      status: 404,
+      message: "Something went wrong, Please try again later.",
+      data: null,
+    };
+  }
+};
+
 export const getProjectTasks = async (projectId: string) => {
   if (!projectId) {
     return {
