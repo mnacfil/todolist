@@ -8,6 +8,7 @@ import ToggleAddTask from "@/components/global/toggle-add-task";
 import Task from "@/components/global/task";
 import { useAuth } from "@clerk/nextjs";
 import { TaskPlace } from "@/components/form/add-task";
+import { useSection } from "@/hooks/section";
 
 type Props = {
   projectId: string;
@@ -17,6 +18,7 @@ const Sections = ({ projectId }: Props) => {
   const { data, isPending } = useQuery(
     getProjectSectionsOptions(projectId ?? "")
   );
+  const { remove } = useSection(projectId);
 
   const { userId } = useAuth();
   if (!userId) return;
@@ -37,9 +39,13 @@ const Sections = ({ projectId }: Props) => {
               hasActions={true}
               Actions={
                 <SectionActions
+                  title={section.title}
+                  totalTasks={section?.tasks?.length ?? 0}
                   onArchive={() => {}}
                   onCopyLink={() => {}}
-                  onDelete={() => {}}
+                  onDelete={() => {
+                    remove.mutate(section.id);
+                  }}
                   onDuplicate={() => {}}
                   onEdit={() => {}}
                   onMove={() => {}}

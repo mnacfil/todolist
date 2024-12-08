@@ -1,4 +1,9 @@
-import { createSection, getProjectSections } from "@/actions/section";
+import {
+  createSection,
+  deleteSection,
+  getProjectSections,
+  updateSection,
+} from "@/actions/section";
 import { createTask, deleteTask, updateTask } from "@/actions/task";
 import { appKeys } from "@/lib/react-query/keys";
 import { Prisma } from "@prisma/client";
@@ -53,8 +58,106 @@ export const useSection = (projectId: string) => {
     },
   });
 
+  const deleteSectionMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return await deleteSection(id);
+    },
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({
+        queryKey: appKeys.getProjectSections(projectId),
+      });
+
+      const previousSections = queryClient.getQueryData(
+        appKeys.getProjectSections(projectId)
+      );
+
+      queryClient.setQueryData(
+        appKeys.getProjectSections(projectId),
+        (old: Awaited<ReturnType<typeof getProjectSections>>) => ({
+          ...old,
+          ["data"]: old.data?.filter((section) => section.id !== payload),
+        })
+      );
+
+      return { previousSections };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(
+        appKeys.getProjectSections(projectId),
+        context?.previousSections
+      );
+    },
+    onSettled: (response) => {
+      if (response?.status === 200) {
+        toast("Success", {
+          description: response?.message ?? "Section deleted.",
+        });
+      } else {
+        toast("Error", {
+          description:
+            response?.message ?? "Section cannot be deleted at this time.",
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getProjectSections(projectId),
+      });
+    },
+  });
+
+  const updateSectionMutation = useMutation({
+    mutationFn: async ({ id, name }: { id: string; name: string }) => {
+      return await updateSection({ name, sectionId: id });
+    },
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({
+        queryKey: appKeys.getProjectSections(projectId),
+      });
+
+      const previousSections = queryClient.getQueryData(
+        appKeys.getProjectSections(projectId)
+      );
+
+      queryClient.setQueryData(
+        appKeys.getProjectSections(projectId),
+        (old: Awaited<ReturnType<typeof getProjectSections>>) => ({
+          ...old,
+          ["data"]: old.data?.map((section) =>
+            section.id !== payload.id
+              ? { ...section, title: payload.name }
+              : section
+          ),
+        })
+      );
+
+      return { previousSections };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(
+        appKeys.getProjectSections(projectId),
+        context?.previousSections
+      );
+    },
+    onSettled: (response) => {
+      if (response?.status === 200) {
+        toast("Success", {
+          description: response?.message ?? "Section deleted.",
+        });
+      } else {
+        toast("Error", {
+          description:
+            response?.message ?? "Section cannot be deleted at this time.",
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getProjectSections(projectId),
+      });
+    },
+  });
+
   return {
     create: createSectionMutation,
+    remove: deleteSectionMutation,
+    update: updateSectionMutation,
   };
 };
 

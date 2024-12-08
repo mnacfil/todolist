@@ -1,3 +1,4 @@
+import Alert from "@/components/global/alert";
 import MoreActionItem from "@/components/global/more-actions/item";
 import {
   DropdownMenuGroup,
@@ -5,6 +6,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 type Props = {
+  title: string;
+  totalTasks: number;
   onEdit: () => void;
   onMove: () => void;
   onDuplicate: () => void;
@@ -14,6 +17,8 @@ type Props = {
 };
 
 const SectionActions = ({
+  title,
+  totalTasks,
   onDelete,
   onEdit,
   onArchive,
@@ -44,11 +49,12 @@ const SectionActions = ({
           label="Archive"
           onClick={onArchive}
         />
-        <MoreActionItem
-          iconName="trash-2"
-          label="Delete"
-          color="text-red-500"
-          onClick={onDelete}
+        <Alert
+          title="Delete section?"
+          description={`The ${title} section and its ${totalTasks} tasks will be permanently deleted.`}
+          trigger={<p className="text-xs cursor-pointer">Delete</p>}
+          onCancel={() => {}}
+          onDelete={onDelete}
         />
       </DropdownMenuGroup>
     </>
