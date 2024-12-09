@@ -63,7 +63,9 @@ const MyProjects = (props: Props) => {
                 href={projectHref}
                 className={clsx(
                   `flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm`,
-                  isActive ? "bg-orange-400/10" : "bg-none"
+                  isActive
+                    ? "bg-orange-400/10 hover:bg-orange-400/10"
+                    : "bg-none"
                 )}
                 prefetch={true}
               >
@@ -82,6 +84,7 @@ const MyProjects = (props: Props) => {
                     "text-muted-foreground/50 text-sm",
                     isActive && "text-red-800"
                   )}
+                  onMouseEnter={() => console.log(project.title)}
                 >
                   {project?._count?.tasks ?? 0}
                 </p>

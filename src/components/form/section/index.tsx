@@ -14,31 +14,42 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { useSection } from "@/hooks/section";
+import { Section } from "@prisma/client";
 
 type Props = {
   projectId: string;
+  isEditing?: boolean;
+  data?: Section;
   onCancel: () => void;
 };
 
-const SectionForm = ({ projectId, onCancel }: Props) => {
-  const { create } = useSection(projectId ?? "");
+const SectionForm = ({ projectId, isEditing, data, onCancel }: Props) => {
+  const { create, update } = useSection(projectId ?? "");
   const form = useForm<z.infer<typeof SectionSchema>>({
     mode: "onSubmit",
     defaultValues: {
-      name: "",
+      name: isEditing ? data?.title : "",
     },
     resolver: zodResolver(SectionSchema),
   });
 
   const onSubmit = (values: z.infer<typeof SectionSchema>) => {
-    create.mutate({
-      title: values.name,
-      Project: {
-        connect: {
-          id: projectId,
+    if (isEditing) {
+      update.mutate({
+        id: data?.id as string,
+        name: values.name,
+      });
+      onCancel();
+    } else {
+      create.mutate({
+        title: values.name,
+        Project: {
+          connect: {
+            id: projectId,
+          },
         },
-      },
-    });
+      });
+    }
     form.reset();
   };
 
@@ -70,10 +81,18 @@ const SectionForm = ({ projectId, onCancel }: Props) => {
               }
             )}`}
             size={"sm"}
-            disabled={form.getValues("name").length === 0}
-            aria-disabled={form.getValues("name").length === 0}
+            disabled={
+              form.getValues("name")?.length === 0 ||
+              update.isPending ||
+              create.isPending
+            }
+            aria-disabled={
+              form.getValues("name")?.length === 0 ||
+              update.isPending ||
+              create.isPending
+            }
           >
-            Add section
+            {isEditing ? "Save" : "Add section"}
           </Button>
           <Button
             type="submit"

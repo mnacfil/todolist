@@ -38,5 +38,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ##
 
 Next:
-Crud functionality for task under section - Count each task under it
-Crud functionality for Section
+Project Crud
