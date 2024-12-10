@@ -25,9 +25,11 @@ import { useRef } from "react";
 import { useProject } from "@/hooks/project";
 import { useAuth } from "@clerk/nextjs";
 
-type Props = {};
+type Props = {
+  onCancel: () => void;
+};
 
-const AddProjectForm = (props: Props) => {
+const AddProjectForm = ({ onCancel }: Props) => {
   const { userId } = useAuth();
   const nameRef = useRef<HTMLInputElement>(null);
   const { projectMutation } = useProject(userId as string);
@@ -42,6 +44,7 @@ const AddProjectForm = (props: Props) => {
 
   const onSubmit = (values: z.infer<typeof AddProjectSchema>) => {
     try {
+      // if(isEditing)
       projectMutation.create.mutate({
         userId: userId as string,
         data: {
@@ -57,6 +60,7 @@ const AddProjectForm = (props: Props) => {
       console.log(error);
     } finally {
       form.reset();
+      onCancel();
     }
   };
 
@@ -109,7 +113,7 @@ const AddProjectForm = (props: Props) => {
           )}
         />
         <div className="flex items-center gap-2 justify-end ">
-          <Button value={"ghost"} type="button">
+          <Button value={"ghost"} type="button" onClick={onCancel}>
             Cancel
           </Button>
           <Button type="submit">Add</Button>

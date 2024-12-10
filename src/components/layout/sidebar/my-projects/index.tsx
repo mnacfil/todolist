@@ -10,12 +10,14 @@ import { getUserProjectsOptions } from "@/lib/react-query/options";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { TOTAL_PROJECTS } from "@/constants/config";
+import { useState } from "react";
 
 type Props = {};
 
 const MyProjects = (props: Props) => {
   const pathname = usePathname();
   const { userId } = useAuth();
+  const [open, setOpen] = useState(false);
 
   const { isPending, data } = useQuery(
     getUserProjectsOptions(userId as string)
@@ -30,10 +32,10 @@ const MyProjects = (props: Props) => {
             USED: {data?.data?.length}/{TOTAL_PROJECTS}
           </span>
         </div>
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger
             className="disabled:opacity-50 cursor-pointer disabled:cursor-default"
-            disabled={data?.data?.length === 5}
+            disabled={data?.data?.length === TOTAL_PROJECTS}
           >
             <Plus size={16} />
           </DialogTrigger>
@@ -41,7 +43,7 @@ const MyProjects = (props: Props) => {
             <h3 className="pt-4 pl-4">Add project</h3>
             <Separator />
             <div className="px-4 pb-4">
-              <AddProjectForm />
+              <AddProjectForm onCancel={() => setOpen(false)} />
             </div>
           </DialogContent>
         </Dialog>

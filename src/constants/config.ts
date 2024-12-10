@@ -1,1 +1,1 @@
-export const TOTAL_PROJECTS = 5;
+export const TOTAL_PROJECTS = 10;
