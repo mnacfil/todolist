@@ -1,4 +1,10 @@
-import { createProject, getProjectTasks } from "@/actions/project";
+import {
+  createProject,
+  deleteProject,
+  getProjects,
+  getProjectTasks,
+  updateProject,
+} from "@/actions/project";
 import { createTask, deleteTask, updateTask } from "@/actions/task";
 import { appKeys } from "@/lib/react-query/keys";
 import { Prisma } from "@prisma/client";
@@ -30,7 +36,6 @@ export const useProject = (userId: string) => {
         ...old,
         data: [payload.data, ...old.data],
       }));
-      console.log(previouseProjects);
 
       return { previouseProjects };
     },
@@ -43,17 +48,109 @@ export const useProject = (userId: string) => {
   });
 
   const deleteProjectMutation = useMutation({
-    mutationFn: async (id: string) => {},
-    onMutate: () => {},
-    onError: () => {},
-    onSettled: () => {},
+    mutationFn: async (id: string) => {
+      return await deleteProject(id);
+    },
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({
+        queryKey: appKeys.getUserProjects(userId),
+      });
+      const previouseProjects = queryClient.getQueryData(
+        appKeys.getUserProjects(userId)
+      );
+
+      queryClient.setQueryData(
+        appKeys.getUserProjects(userId),
+        (old: Awaited<ReturnType<typeof getProjects>>) => ({
+          ...old,
+          data: old.data?.filter((project) => project.id !== payload),
+        })
+      );
+
+      return { previouseProjects };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(
+        appKeys.getUserProjects(userId),
+        context?.previouseProjects
+      );
+      console.log(error);
+    },
+    onSettled: (response) => {
+      if (response?.status === 200) {
+        toast("Success", {
+          description: response.message ?? "Deleted project successfully",
+        });
+      } else {
+        toast("Error", {
+          description: response?.message ?? "Cannot delete project.",
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getUserProjects(userId),
+      });
+    },
   });
 
   const updateProjectMutation = useMutation({
-    mutationFn: async (id: string) => {},
-    onMutate: () => {},
-    onError: () => {},
-    onSettled: () => {},
+    mutationFn: async ({
+      projectId,
+      title,
+    }: {
+      projectId: string;
+      title: string;
+    }) => {
+      return await updateProject({
+        projectId,
+        title,
+      });
+    },
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({
+        queryKey: appKeys.getUserProjects(userId),
+      });
+      const previouseProjects = queryClient.getQueryData(
+        appKeys.getUserProjects(userId)
+      );
+
+      queryClient.setQueryData(
+        appKeys.getUserProjects(userId),
+        (old: Awaited<ReturnType<typeof getProjects>>) => ({
+          ...old,
+          data: old.data?.map((project) =>
+            project.id === payload.projectId
+              ? {
+                  ...project,
+                  title: payload.title,
+                }
+              : project
+          ),
+        })
+      );
+
+      return { previouseProjects };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(
+        appKeys.getUserProjects(userId),
+        context?.previouseProjects
+      );
+      console.log(error);
+    },
+    onSettled: (response) => {
+      if (response?.status === 200) {
+        toast("Success", {
+          description: response.message ?? "Deleted project successfully",
+        });
+      } else {
+        toast("Error", {
+          description: response?.message ?? "Cannot delete project.",
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getUserProjects(userId),
+      });
+    },
   });
 
   const projectMutation = {

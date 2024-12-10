@@ -13,6 +13,7 @@ type Props = {
   trigger?: ReactNode;
   triggerClassName?: string;
   contentClassName?: string;
+  onClick?: () => void;
 };
 
 const MoreActions = ({
@@ -23,7 +24,7 @@ const MoreActions = ({
 }: Props) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className={triggerClassName}>
+      <DropdownMenuTrigger className={triggerClassName} asChild>
         {trigger || (
           <Ellipsis size={16} className="text-gray-400 cursor-pointer" />
         )}

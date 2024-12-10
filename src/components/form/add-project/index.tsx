@@ -24,12 +24,15 @@ import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { useProject } from "@/hooks/project";
 import { useAuth } from "@clerk/nextjs";
+import { ProjectWithRelation } from "@/components/layout/sidebar/my-projects/project";
 
 type Props = {
+  isEditing?: boolean;
+  currentData?: ProjectWithRelation | null;
   onCancel: () => void;
 };
 
-const AddProjectForm = ({ onCancel }: Props) => {
+const AddProjectForm = ({ currentData, isEditing, onCancel }: Props) => {
   const { userId } = useAuth();
   const nameRef = useRef<HTMLInputElement>(null);
   const { projectMutation } = useProject(userId as string);
@@ -37,25 +40,31 @@ const AddProjectForm = ({ onCancel }: Props) => {
     resolver: zodResolver(AddProjectSchema),
     mode: "onSubmit",
     defaultValues: {
-      name: "",
-      color: "",
+      name: isEditing ? currentData?.title : "",
+      color: isEditing ? "" : "",
     },
   });
 
   const onSubmit = (values: z.infer<typeof AddProjectSchema>) => {
     try {
-      // if(isEditing)
-      projectMutation.create.mutate({
-        userId: userId as string,
-        data: {
+      if (isEditing) {
+        projectMutation.update.mutate({
+          projectId: currentData?.id ?? "",
           title: values.name,
-          author: {
-            connect: {
-              clerkId: userId as string,
+        });
+      } else {
+        projectMutation.create.mutate({
+          userId: userId as string,
+          data: {
+            title: values.name,
+            author: {
+              connect: {
+                clerkId: userId as string,
+              },
             },
           },
-        },
-      });
+        });
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -116,7 +125,7 @@ const AddProjectForm = ({ onCancel }: Props) => {
           <Button value={"ghost"} type="button" onClick={onCancel}>
             Cancel
           </Button>
-          <Button type="submit">Add</Button>
+          <Button type="submit">{isEditing ? "Save" : "Add"}</Button>
         </div>
       </form>
     </Form>
