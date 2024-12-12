@@ -75,3 +75,9 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.custom-icon path,
+.custom-icon rect {
+  stroke: currentColor;
+  stroke-width: 0.7px;
+}

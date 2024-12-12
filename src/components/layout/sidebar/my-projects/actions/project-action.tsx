@@ -4,6 +4,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import Alert from "@/components/global/alert";
+import Icon from "@/components/icons/icon";
 
 type Props = {
   projectTitle: string;
@@ -15,9 +16,13 @@ const ProjectAction = ({ projectTitle, onDelete, onEdit }: Props) => {
   return (
     <>
       <DropdownMenuGroup>
-        <MoreActionItem iconName="pencil" label="Edit" onClick={onEdit} />
-        <MoreActionItem iconName="heart" label="Add to favorite" />
-        <MoreActionItem iconName="copy" label="Duplicate" />
+        <MoreActionItem
+          Icon={<Icon icon="Edit" />}
+          label="Edit"
+          onClick={onEdit}
+        />
+        <MoreActionItem Icon={<Icon icon="Edit" />} label="Add to favorite" />
+        <MoreActionItem Icon={<Icon icon="Edit" />} label="Duplicate" />
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
@@ -31,7 +36,13 @@ const ProjectAction = ({ projectTitle, onDelete, onEdit }: Props) => {
           }
           onCancel={() => {}}
           onDelete={onDelete}
-          trigger={<p>Delete</p>}
+          trigger={
+            <MoreActionItem
+              Icon={<Icon icon="Delete" />}
+              label="Delete"
+              onClick={onDelete}
+            />
+          }
           key={"project-action" + "-" + projectTitle}
         />
       </DropdownMenuGroup>

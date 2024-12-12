@@ -2,12 +2,11 @@ import {
   DropdownMenuItem,
   DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";
-import IconRenderer from "../icon-renderer";
-import dynamicIconImports from "lucide-react/dynamicIconImports";
 import clsx from "clsx";
+import { ReactNode } from "react";
 
 type Props = {
-  iconName: keyof typeof dynamicIconImports;
+  Icon: ReactNode;
   label: string;
   description?: string;
   shortcut?: string;
@@ -16,7 +15,7 @@ type Props = {
 };
 
 const MoreActionItem = ({
-  iconName,
+  Icon,
   label,
   description,
   shortcut,
@@ -32,7 +31,7 @@ const MoreActionItem = ({
       className={`${color} flex flex-col w-full gap-1 items-start`}
     >
       <div className="flex gap-1">
-        <IconRenderer name={iconName} />
+        {Icon}
         <span className={clsx("text-xs ", color ? color : "")}>{label}</span>
         <DropdownMenuShortcut className="text-[10px] font-thin">
           {shortcut}
