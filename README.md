@@ -38,4 +38,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ##
 
 Next:
-Project Crud
+
+- remove icons from actions (lucide-react)
+- download svg for each icon

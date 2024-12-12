@@ -51,7 +51,13 @@ const SectionActions = ({
         />
         <Alert
           title="Delete section?"
-          description={`The ${title} section and its ${totalTasks} tasks will be permanently deleted.`}
+          description={
+            <p className="text-gray-700">
+              The <strong className="text-gray-800">{title}</strong> section and
+              its <strong className="text-gray-800">{totalTasks}</strong> tasks
+              will be permanently deleted.
+            </p>
+          }
           trigger={<p className="text-xs cursor-pointer">Delete</p>}
           onCancel={() => {}}
           onDelete={onDelete}

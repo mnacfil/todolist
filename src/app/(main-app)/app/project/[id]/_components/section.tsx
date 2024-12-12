@@ -30,6 +30,7 @@ const Section = ({ data, projectId, userId }: Props) => {
         key={data.id}
         label={data.title}
         subLabel={data?.tasks?.length.toString() ?? "0"}
+        showChildren={false}
         hasActions={true}
         isEditing={isEditing}
         EditingForm={

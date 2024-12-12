@@ -10,6 +10,7 @@ type Props = {
   label: string;
   subLabel: string;
   children: ReactNode;
+  showChildren?: boolean;
   hasActions?: boolean;
   Actions?: ReactNode;
   EditingForm?: ReactNode;
@@ -20,12 +21,13 @@ const HideAndShow = ({
   children,
   label,
   subLabel,
+  showChildren = true,
   hasActions = false,
   Actions,
   isEditing = false,
   EditingForm,
 }: Props) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(showChildren);
 
   return (
     <>
@@ -56,7 +58,7 @@ const HideAndShow = ({
                 )}`}
                 onClick={() => setOpen((prev) => !prev)}
               >
-                <p className="text-xs font-semibold">{label} </p>
+                <p className="text-xs font-bold">{label} </p>
                 <span className="text-muted-foreground text-[10px]">
                   {subLabel}
                 </span>

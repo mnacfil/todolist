@@ -14,7 +14,7 @@ import React, { ReactNode } from "react";
 type Props = {
   trigger: ReactNode;
   title: string;
-  description: string;
+  description: ReactNode;
   onCancel: () => void;
   onDelete: () => void;
 };

@@ -25,7 +25,10 @@ const MoreActionItem = ({
 }: Props) => {
   return (
     <DropdownMenuItem
-      onClick={onClick}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick && onClick();
+      }}
       className={`${color} flex flex-col w-full gap-1 items-start`}
     >
       <div className="flex gap-1">

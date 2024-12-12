@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 import { useProject } from "@/hooks/project";
 import { useAuth } from "@clerk/nextjs";
-import { ProjectWithRelation } from "@/components/layout/sidebar/my-projects/project";
+import { ProjectWithRelation } from "@/components/layout/sidebar/my-projects/project-link";
 
 type Props = {
   isEditing?: boolean;

@@ -4,7 +4,7 @@ import { Project } from "@prisma/client";
 import clsx from "clsx";
 import Link from "next/link";
 import { useState } from "react";
-import ProjectAction from "./actions/project";
+import ProjectAction from "./actions/project-action";
 import MoreActions from "@/components/global/more-actions";
 import { useProject } from "@/hooks/project";
 import { useRouter } from "next/navigation";
@@ -20,7 +20,7 @@ type Props = {
   isActive: boolean;
   href: string;
   userId: string;
-  onEditCallback: (project: ProjectWithRelation) => void;
+  onEditCallback: () => void;
 };
 
 const ProjectLink = ({
@@ -60,13 +60,14 @@ const ProjectLink = ({
         <MoreActions onClick={() => setIsHover(true)}>
           <ProjectAction
             key={href}
+            projectTitle={data.title}
             onDelete={() => {
               projectMutation.remove.mutate(data.id);
               // not working
               router.push("app/inbox");
             }}
             onEdit={() => {
-              onEditCallback(data);
+              onEditCallback();
             }}
           />
         </MoreActions>
@@ -80,20 +81,6 @@ const ProjectLink = ({
       >
         {data?._count?.tasks ?? 0}
       </p>
-      {/* {isHover ? (
-        <MoreActions onClick={() => setIsHover(true)}>
-          <ProjectAction key={href} onDelete={() => {}} onEdit={() => {}} />
-        </MoreActions>
-      ) : (
-        <p
-          className={clsx(
-            "text-muted-foreground/50 text-sm",
-            isActive && "text-red-800"
-          )}
-        >
-          {data?._count?.tasks ?? 0}
-        </p>
-      )} */}
     </Link>
   );
 };

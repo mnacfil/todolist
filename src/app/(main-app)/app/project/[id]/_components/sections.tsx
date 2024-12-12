@@ -23,7 +23,7 @@ const Sections = ({ projectId }: Props) => {
 
   return (
     <div>
-      {data?.data && data.data.length > 0 ? (
+      {data?.data && data.data.length > 0 && (
         <div className="flex flex-col gap-3 w-full">
           {data.data.map((section) => (
             <Section
@@ -34,8 +34,6 @@ const Sections = ({ projectId }: Props) => {
             />
           ))}
         </div>
-      ) : (
-        <div>No sections</div>
       )}
     </div>
   );

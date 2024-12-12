@@ -9,7 +9,7 @@ import { getUserProjectsOptions } from "@/lib/react-query/options";
 import { useAuth } from "@clerk/nextjs";
 import { TOTAL_PROJECTS } from "@/constants/config";
 import { useState } from "react";
-import ProjectLink, { ProjectWithRelation } from "./project";
+import ProjectLink, { ProjectWithRelation } from "./project-link";
 
 type Props = {};
 
@@ -24,7 +24,9 @@ const MyProjects = (props: Props) => {
     getUserProjectsOptions(userId as string)
   );
 
-  console.log(selectedProject);
+  if (isPending) {
+    return <p>Loading projects...</p>;
+  }
 
   return (
     <div className="mt-5 space-y-3">
@@ -57,7 +59,6 @@ const MyProjects = (props: Props) => {
         </Dialog>
       </div>
       <div className="flex flex-col w-full">
-        {isPending && <p>Loading projects...</p>}
         {data?.data &&
           data.data.map((project) => {
             const words = project.title.toLowerCase().split(" ");
@@ -74,8 +75,8 @@ const MyProjects = (props: Props) => {
                 isActive={isActive}
                 href={projectHref}
                 userId={userId!}
-                onEditCallback={(data) => {
-                  setSelectedProject(data);
+                onEditCallback={() => {
+                  setSelectedProject(project);
                   setOpen(true);
                   setIsEditing(true);
                 }}

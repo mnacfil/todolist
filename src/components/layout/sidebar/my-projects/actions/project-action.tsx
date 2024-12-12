@@ -3,13 +3,15 @@ import {
   DropdownMenuGroup,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import Alert from "@/components/global/alert";
 
 type Props = {
+  projectTitle: string;
   onEdit: () => void;
   onDelete: () => void;
 };
 
-const ProjectAction = ({ onDelete, onEdit }: Props) => {
+const ProjectAction = ({ projectTitle, onDelete, onEdit }: Props) => {
   return (
     <>
       <DropdownMenuGroup>
@@ -19,11 +21,18 @@ const ProjectAction = ({ onDelete, onEdit }: Props) => {
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <MoreActionItem
-          iconName="trash-2"
-          label="Delete"
-          color="text-red-500"
-          onClick={onDelete}
+        <Alert
+          title="Delete project?"
+          description={
+            <p className="text-gray-700">
+              The <strong className="text-gray-800">{projectTitle}</strong>{" "}
+              project and all of its tasks will be permanently deleted.
+            </p>
+          }
+          onCancel={() => {}}
+          onDelete={onDelete}
+          trigger={<p>Delete</p>}
+          key={"project-action" + "-" + projectTitle}
         />
       </DropdownMenuGroup>
     </>
