@@ -10,6 +10,7 @@ import { useAuth } from "@clerk/nextjs";
 import { TOTAL_PROJECTS } from "@/constants/config";
 import { useState } from "react";
 import ProjectLink, { ProjectWithRelation } from "./project-link";
+import Icon from "@/components/icons/icon";
 
 type Props = {};
 
@@ -43,7 +44,7 @@ const MyProjects = (props: Props) => {
             disabled={data?.data?.length === TOTAL_PROJECTS}
             onClick={() => setIsEditing(false)}
           >
-            <Plus size={16} />
+            <Icon icon="Plus" />
           </DialogTrigger>
           <DialogContent className="p-0">
             <h3 className="pt-4 pl-4">Add project</h3>

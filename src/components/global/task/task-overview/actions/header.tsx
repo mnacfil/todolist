@@ -1,5 +1,6 @@
 import IconRenderer from "@/components/global/icon-renderer";
 import MoreActionItem from "@/components/global/more-actions/item";
+import Icon from "@/components/icons/icon";
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
@@ -40,23 +41,36 @@ const HeaderActions = (props: Props) => {
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <MoreActionItem iconName="copy-plus" label="Duplicate" />
+        <MoreActionItem Icon={<Icon icon="Copy" />} label="Duplicate" />
         <MoreActionItem
-          iconName="link"
+          Icon={<Icon icon="Link" />}
           label="Copy link to task"
           shortcut="CltrC"
         />
-        <MoreActionItem iconName="mail" label="Add comments via email" />
-        <MoreActionItem iconName="square-activity" label="View task activity" />
-        <MoreActionItem iconName="printer" label="Print" />
+        <MoreActionItem
+          Icon={<Icon icon="Copy" />}
+          label="Add comments via email"
+        />
+        <MoreActionItem
+          Icon={<Icon icon="Activity" />}
+          label="View task activity"
+        />
+        <MoreActionItem Icon={<Icon icon="Print" />} label="Print" />
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <MoreActionItem iconName="puzzle" label="Add extension..." />
+        <MoreActionItem
+          Icon={<Icon icon="Puzzle" />}
+          label="Add extension..."
+        />
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <MoreActionItem iconName="trash-2" label="Delete" shortcut="Delete" />
+        <MoreActionItem
+          Icon={<Icon icon="Delete" />}
+          label="Delete"
+          shortcut="Delete"
+        />
       </DropdownMenuGroup>
     </>
   );

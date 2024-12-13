@@ -1,5 +1,6 @@
 import Alert from "@/components/global/alert";
 import MoreActionItem from "@/components/global/more-actions/item";
+import Icon from "@/components/icons/icon";
 import {
   DropdownMenuGroup,
   DropdownMenuSeparator,
@@ -29,15 +30,23 @@ const SectionActions = ({
   return (
     <>
       <DropdownMenuGroup>
-        <MoreActionItem iconName="pencil" label="Edit" onClick={onEdit} />
-        <MoreActionItem iconName="move" label="Move to..." onClick={onMove} />
         <MoreActionItem
-          iconName="copy-plus"
+          Icon={<Icon icon="Edit" />}
+          label="Edit"
+          onClick={onEdit}
+        />
+        <MoreActionItem
+          Icon={<Icon icon="Move" />}
+          label="Move to..."
+          onClick={onMove}
+        />
+        <MoreActionItem
+          Icon={<Icon icon="Copy" />}
           label="Copy text"
           onClick={onDuplicate}
         />
         <MoreActionItem
-          iconName="link"
+          Icon={<Icon icon="Link" />}
           label="Copy link to section"
           onClick={onCopyLink}
         />
@@ -45,7 +54,7 @@ const SectionActions = ({
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <MoreActionItem
-          iconName="archive"
+          Icon={<Icon icon="Edit" />}
           label="Archive"
           onClick={onArchive}
         />
@@ -58,7 +67,13 @@ const SectionActions = ({
               will be permanently deleted.
             </p>
           }
-          trigger={<p className="text-xs cursor-pointer">Delete</p>}
+          trigger={
+            <MoreActionItem
+              Icon={<Icon icon="Delete" />}
+              label="Delete"
+              // onClick={onCopyLink}
+            />
+          }
           onCancel={() => {}}
           onDelete={onDelete}
         />

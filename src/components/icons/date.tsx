@@ -15,9 +15,9 @@ export const Date = () => {
         stroke-width="2"
         stroke-linecap="round"
       />
-      <rect x="6" y="12" width="3" height="3" rx="0.5" fill="#000000" />
-      <rect x="10.5" y="12" width="3" height="3" rx="0.5" fill="#000000" />
-      <rect x="15" y="12" width="3" height="3" rx="0.5" fill="#000000" />
+      <rect x="6" y="12" width="3" height="3" rx="0.5" />
+      <rect x="10.5" y="12" width="3" height="3" rx="0.5" />
+      <rect x="15" y="12" width="3" height="3" rx="0.5" />
     </svg>
   );
 };

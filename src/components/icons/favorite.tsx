@@ -1,6 +1,6 @@
 import React from "react";
 
-export const favorite = () => {
+export const Favorite = () => {
   return (
     <svg
       width="18px"

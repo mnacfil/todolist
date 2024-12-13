@@ -39,6 +39,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import MoreActionItem from "@/components/global/more-actions/item";
+import Icon from "@/components/icons/icon";
 
 type Props = {
   userId: string;
@@ -71,24 +72,44 @@ const TaskActions = ({ userId }: Props) => {
   return (
     <>
       <DropdownMenuGroup>
-        <MoreActionItem iconName="pencil" label="Edit" shortcut="Ctrl E" />
-        <MoreActionItem iconName="list" label="Go to project" shortcut="G" />
-      </DropdownMenuGroup>
-      <DropdownMenuSeparator />
-      <DropdownMenuGroup>
-        <MoreActionItem iconName="sun" label="Due date" shortcut="T" />
-        <MoreActionItem iconName="list" label="Priority" shortcut="Y" />
-      </DropdownMenuGroup>
-      <DropdownMenuSeparator />
-      <DropdownMenuGroup>
-        <MoreActionItem iconName="alarm-clock" label="Reminders" />
-      </DropdownMenuGroup>
-      <DropdownMenuSeparator />
-      <DropdownMenuGroup>
-        <MoreActionItem iconName="move" label="Move to..." shortcut="V" />
-        <MoreActionItem iconName="copy-plus" label="Duplicate" />
         <MoreActionItem
-          iconName="link"
+          Icon={<Icon icon="Edit" />}
+          label="Edit"
+          shortcut="Ctrl E"
+        />
+        <MoreActionItem
+          Icon={<Icon icon="Goto" />}
+          label="Go to project"
+          shortcut="G"
+        />
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        <MoreActionItem
+          Icon={<Icon icon="Sun" />}
+          label="Due date"
+          shortcut="T"
+        />
+        <MoreActionItem
+          Icon={<Icon icon="Flag" />}
+          label="Priority"
+          shortcut="Y"
+        />
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        <MoreActionItem Icon={<Icon icon="Reminder" />} label="Reminders" />
+      </DropdownMenuGroup>
+      <DropdownMenuSeparator />
+      <DropdownMenuGroup>
+        <MoreActionItem
+          Icon={<Icon icon="Move" />}
+          label="Move to..."
+          shortcut="V"
+        />
+        <MoreActionItem Icon={<Icon icon="Duplicate" />} label="Duplicate" />
+        <MoreActionItem
+          Icon={<Icon icon="Link" />}
           label="Copy link to task"
           shortcut="CtrlC"
         />
@@ -96,7 +117,7 @@ const TaskActions = ({ userId }: Props) => {
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <MoreActionItem
-          iconName="puzzle"
+          Icon={<Icon icon="Puzzle" />}
           label="Add extension..."
           shortcut="Delete"
         />
@@ -104,7 +125,7 @@ const TaskActions = ({ userId }: Props) => {
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <MoreActionItem
-          iconName="trash-2"
+          Icon={<Icon icon="Delete" />}
           label="Delete"
           color="text-red-500"
         />

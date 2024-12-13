@@ -4,8 +4,8 @@ export const Reminder = () => {
   return (
     <svg
       fill="#000000"
-      width="18px"
-      height="18px"
+      width="16px"
+      height="16px"
       viewBox="0 0 52 52"
       xmlns="http://www.w3.org/2000/svg"
     >

@@ -21,8 +21,15 @@ const ProjectAction = ({ projectTitle, onDelete, onEdit }: Props) => {
           label="Edit"
           onClick={onEdit}
         />
-        <MoreActionItem Icon={<Icon icon="Edit" />} label="Add to favorite" />
-        <MoreActionItem Icon={<Icon icon="Edit" />} label="Duplicate" />
+        <MoreActionItem
+          Icon={<Icon icon="Favorite" />}
+          label="Add to favorite"
+        />
+        <MoreActionItem
+          Icon={<Icon icon="Duplicate" />}
+          color="red"
+          label="Duplicate"
+        />
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>

@@ -24,6 +24,7 @@ import {
 } from "@/lib/react-query/options";
 import { useProjectTask } from "@/hooks/project";
 import { useSectionTask } from "@/hooks/section";
+import Icon from "@/components/icons/icon";
 
 export enum TaskType {
   MAIN_TASK,
@@ -125,13 +126,9 @@ const Task = ({
                 </DialogTrigger>
               </div>
               <div className="flex items-center gap-2">
-                <Edit2
-                  className="text-gray-400 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-950"
-                  size={16}
-                  onClick={onEditTask}
-                />
-                <Calendar className="text-gray-400" size={16} />
-                <MessageSquare className="text-gray-400" size={16} />
+                <Icon icon="Edit" onClick={onEditTask} />
+                <Icon icon="Date" onClick={onEditTask} />
+                <Icon icon="Message" onClick={onEditTask} />
                 <MoreActions>
                   <TaskActions userId={userId} />
                 </MoreActions>

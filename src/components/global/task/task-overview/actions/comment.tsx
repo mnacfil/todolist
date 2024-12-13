@@ -1,4 +1,5 @@
 import MoreActionItem from "@/components/global/more-actions/item";
+import Icon from "@/components/icons/icon";
 import {
   DropdownMenuGroup,
   DropdownMenuSeparator,
@@ -13,14 +14,21 @@ const CommentActions = ({ onDelete, onEdit }: Props) => {
   return (
     <>
       <DropdownMenuGroup>
-        <MoreActionItem iconName="pencil" label="Edit" onClick={onEdit} />
-        <MoreActionItem iconName="copy" label="Copy text" />
-        <MoreActionItem iconName="link" label="Copy link to comment" />
+        <MoreActionItem
+          Icon={<Icon icon="Edit" />}
+          label="Edit"
+          onClick={onEdit}
+        />
+        <MoreActionItem Icon={<Icon icon="Copy" />} label="Copy text" />
+        <MoreActionItem
+          Icon={<Icon icon="Link" />}
+          label="Copy link to comment"
+        />
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
         <MoreActionItem
-          iconName="trash-2"
+          Icon={<Icon icon="Delete" />}
           label="Delete"
           color="text-red-500"
           onClick={onDelete}

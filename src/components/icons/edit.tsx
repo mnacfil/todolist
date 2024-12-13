@@ -3,8 +3,8 @@ import React from "react";
 export const Edit = () => {
   return (
     <svg
-      width="18px"
-      height="18px"
+      width="16px"
+      height="16px"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
