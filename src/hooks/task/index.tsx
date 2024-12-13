@@ -11,7 +11,7 @@ import { Prisma } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export const useTask = (userId: string) => {
+export const useTask = () => {
   const queryClient = useQueryClient();
 
   const { isPending, mutate } = useMutation({

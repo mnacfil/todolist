@@ -9,14 +9,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Calendar, Edit2, Inbox, InboxIcon, MessageSquare } from "lucide-react";
-import React, { useOptimistic, useState } from "react";
+import { Inbox, InboxIcon } from "lucide-react";
+import React, { useState } from "react";
 import AddTaskForm, { TaskPlace } from "@/components/form/add-task";
 import { useTask } from "@/hooks/task";
 import { Separator } from "@radix-ui/react-separator";
 import dynamic from "next/dynamic";
 import MoreActions from "../more-actions";
-import { HeaderActions, TaskActions } from "./task-overview/actions";
+import { HeaderActions } from "./task-overview/actions";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   getTaskCommentsOptions,
@@ -24,7 +24,9 @@ import {
 } from "@/lib/react-query/options";
 import { useProjectTask } from "@/hooks/project";
 import { useSectionTask } from "@/hooks/section";
-import Icon from "@/components/icons/icon";
+import HoverActions from "./hover-actions";
+import TaskInfo from "./task-info";
+import clsx from "clsx";
 
 export enum TaskType {
   MAIN_TASK,
@@ -49,7 +51,7 @@ const Task = ({
   place = TaskPlace.MAIN,
 }: Props) => {
   const queryClient = useQueryClient();
-  const { deleteMutate } = useTask(userId);
+  const { deleteMutate } = useTask();
   const { deleteProjectTaskMutation } = useProjectTask(projectId ?? "");
   const { deleteSectionTaskMutation } = useSectionTask(
     projectId ?? "",
@@ -57,9 +59,15 @@ const Task = ({
   );
   const [isEditing, setIsEditing] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const [isHover, setIsHover] = useState(false);
 
   const onCancelTask = () => setIsEditing(false);
-  const onEditTask = () => setIsEditing(true);
+  const onEdit = () => {
+    setIsEditing(true);
+  };
+
+  const onSetDate = () => {};
+  const onComment = () => {};
 
   return (
     <>
@@ -76,7 +84,11 @@ const Task = ({
       ) : (
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
           <div className="p-2 flex flex-col gap-1">
-            <div className="flex justify-between items-center">
+            <div
+              className="flex justify-between items-center cursor-pointer"
+              onMouseEnter={() => setIsHover(true)}
+              onMouseLeave={() => setIsHover(false)}
+            >
               <div className="flex gap-2">
                 <Label htmlFor="taskCheckbox">
                   <Checkbox
@@ -114,24 +126,21 @@ const Task = ({
                     );
                   }}
                 >
-                  <div
-                    className="flex flex-col gap-[0.5px]"
-                    onClick={() => setShowDialog(true)}
-                  >
-                    <h4 className="text-sm font-light">{task.title}</h4>
-                    <p className="p-0 text-xs font-light text-gray-500">
-                      {task.description}
-                    </p>
-                  </div>
+                  <TaskInfo task={task} onClick={() => setShowDialog(true)} />
                 </DialogTrigger>
               </div>
-              <div className="flex items-center gap-2">
-                <Icon icon="Edit" onClick={onEditTask} />
-                <Icon icon="Date" onClick={onEditTask} />
-                <Icon icon="Message" onClick={onEditTask} />
-                <MoreActions>
-                  <TaskActions userId={userId} />
-                </MoreActions>
+              <div
+                className={clsx(
+                  "flex items-center gap-2",
+                  isHover ? "opacity-100" : "opacity-0"
+                )}
+              >
+                <HoverActions
+                  key={task.id}
+                  onComment={onComment}
+                  onEdit={onEdit}
+                  onSetDate={onSetDate}
+                />
               </div>
             </div>
             <div className="flex-1 flex items-center gap-1">
@@ -152,7 +161,6 @@ const Task = ({
                   </MoreActions>
                 </div>
               </div>
-              {/* <div className="text-sm font-light">more actions</div> */}
             </DialogHeader>
             <Separator className="h-[1px] bg-gray-200" />
             <div className="flex flex-row flex-1">
@@ -167,8 +175,3 @@ const Task = ({
 };
 
 export default Task;
-
-// TODO
-// when the request is fail, it still show up in the UI
-// but when you refresh it not.
-// when the request is fail. it must be not show in the UI

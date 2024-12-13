@@ -1,74 +1,18 @@
 "use client";
 
-import { dueDates, priorities } from "@/components/constants";
-import ActionRow from "@/components/global/action-row";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
-  AlertDialogAction,
-  AlertDialogHeader,
-  AlertDialogFooter,
-} from "@/components/ui/alert-dialog";
-import {
-  Edit,
-  List,
-  MoveUp,
-  Flag,
-  AlarmClock,
-  Grip,
-  CopyPlus,
-  Link,
-  Trash,
-} from "lucide-react";
 import React from "react";
-import task from "../..";
-import { useTask } from "@/hooks/task";
 import {
   DropdownMenuGroup,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import MoreActionItem from "@/components/global/more-actions/item";
 import Icon from "@/components/icons/icon";
 
 type Props = {
-  userId: string;
+  onEdit: () => void;
 };
 
-const TaskActions = ({ userId }: Props) => {
-  const { isDeleting, isPending, mutate, deleteMutate } = useTask(userId);
-
-  const activePriority = "P4";
-
-  const onDuplicateTask = async () => {
-    // mutate({
-    //   title: task.title || "",
-    //   description: task?.description || "",
-    //   priority: task?.priority || "",
-    //   author: {
-    //     connect: {
-    //       clerkId: userId,
-    //     },
-    //   },
-    // });
-  };
-
-  const handleSetPriority = async (priority: string) => {};
-
-  const handleDueDate = async () => {};
-
-  const onEdit = () => {};
-
+const TaskActions = ({ onEdit }: Props) => {
   return (
     <>
       <DropdownMenuGroup>
@@ -76,6 +20,7 @@ const TaskActions = ({ userId }: Props) => {
           Icon={<Icon icon="Edit" />}
           label="Edit"
           shortcut="Ctrl E"
+          onClick={onEdit}
         />
         <MoreActionItem
           Icon={<Icon icon="Goto" />}
