@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import AddTaskForm, { TaskPlace } from "@/components/form/add-task";
 import { PlusIcon } from "lucide-react";
+import Icon from "@/components/icons/icon";
 
 type Props = {
   userId: string;

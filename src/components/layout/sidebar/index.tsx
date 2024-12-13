@@ -20,6 +20,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import MyProjects from "./my-projects";
+import Icon from "@/components/icons/icon";
 
 type Props = {};
 
@@ -87,7 +88,7 @@ const Sidebar = (props: Props) => {
           </Dialog>
 
           <div className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-100 rounded-sm">
-            <Search className="w-4 h-4 opacity-50" />
+            <Icon icon="Search" />
             <p className="text-primary text-sm">Search</p>
           </div>
           <div className="flex flex-col w-full">

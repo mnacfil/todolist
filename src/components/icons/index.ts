@@ -1,5 +1,9 @@
+export { CalendarDates } from "./calendar-dates";
+export { Date } from "./date";
+export { Grid } from "./grid";
+export { Inbox } from "./inbox";
+export { Search } from "./search";
 export { Print } from "./print";
-
 export { Activity } from "./activity";
 export { Complete } from "./complete";
 export { Mail } from "./mail";
@@ -13,7 +17,7 @@ export { ChevronRight } from "./chevron-right";
 export { ChevronUp } from "./chevron-up";
 export { Copy } from "./copy";
 export { Couch } from "./couch";
-export { Date } from "./date";
+export { DateRange } from "./date-range";
 export { Duplicate } from "./duplicate";
 export { Favorite } from "./favorite";
 export { Flag } from "./flag";
