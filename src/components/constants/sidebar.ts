@@ -1,23 +1,23 @@
-import { CalendarDays, Calendar, LayoutGrid, Hash, Inbox } from "lucide-react";
+import { IconType } from "../icons/icon-type";
 
 export const sidebarLinks = [
   {
-    Icon: Inbox,
+    icon: "Inbox" as IconType,
     href: "/inbox",
     title: "Inbox",
   },
   {
-    Icon: Calendar,
+    icon: "Date" as IconType,
     href: "/app",
     title: "Today",
   },
   {
-    Icon: CalendarDays,
+    icon: "CalendarDates" as IconType,
     href: "/upcoming",
     title: "Upcoming",
   },
   {
-    Icon: LayoutGrid,
+    icon: "Grid" as IconType,
     href: "/filters-labels",
     title: "Filters & Labels",
   },
@@ -25,7 +25,7 @@ export const sidebarLinks = [
 
 export const favoriteLinks = [
   {
-    Icon: Hash,
+    Icon: "Hash" as IconType,
     href: "/project/home",
     title: "Home",
   },
@@ -33,12 +33,12 @@ export const favoriteLinks = [
 
 export const projectsLinks = [
   {
-    Icon: Hash,
+    Icon: "Hash" as IconType,
     href: "/project/home",
     title: "Home",
   },
   {
-    Icon: Hash,
+    Icon: "Hash" as IconType,
     href: "/project/education",
     title: "Education",
   },

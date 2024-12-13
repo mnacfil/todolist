@@ -21,6 +21,8 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import MyProjects from "./my-projects";
 import Icon from "@/components/icons/icon";
+import { LinksAndActions } from "./links-and-actions";
+import { Favorites } from "./favorites";
 
 type Props = {};
 
@@ -86,78 +88,12 @@ const Sidebar = (props: Props) => {
               <p>Add task</p>
             </DialogContent>
           </Dialog>
-
-          <div className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-100 rounded-sm">
-            <Icon icon="Search" />
-            <p className="text-primary text-sm">Search</p>
-          </div>
-          <div className="flex flex-col w-full">
-            {sidebarLinks.map((link) => {
-              const isActive = link.href === pathname;
-              return (
-                <Link
-                  key={link.title}
-                  href={link.href}
-                  className={clsx(
-                    `flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm`,
-                    isActive ? "bg-orange-400/10" : "bg-none"
-                  )}
-                >
-                  <div className="flex items-center space-x-2">
-                    <link.Icon
-                      className={clsx(
-                        "w-4 h-4 opacity-50",
-                        isActive && "text-red-700"
-                      )}
-                    />
-                    <p
-                      className={clsx(
-                        "text-primary text-sm",
-                        isActive && "text-red-800"
-                      )}
-                    >
-                      {link.title}
-                    </p>
-                  </div>
-                  <p
-                    className={clsx(
-                      "text-muted-foreground/50 text-sm",
-                      isActive && "text-red-800"
-                    )}
-                  >
-                    3
-                  </p>
-                </Link>
-              );
-            })}
-          </div>
+          <LinksAndActions currentPathName={pathname} />
 
           <div className="mt-5 space-y-3">
             <p className="text-sm font-semibold text-gray-500">Favorites</p>
             <div className="flex flex-col w-full space-y-3">
-              {favoriteLinks.map((link) => {
-                const isActive = link.href === pathname;
-                return (
-                  <Link
-                    key={link.title}
-                    href={link.href}
-                    className="flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <link.Icon className="w-4 h-4 opacity-50" />
-                      <p className="text-primary text-sm">{link.title}</p>
-                    </div>
-                    <p
-                      className={clsx(
-                        "text-muted-foreground/50 text-sm",
-                        isActive && "text-red-800"
-                      )}
-                    >
-                      3
-                    </p>
-                  </Link>
-                );
-              })}
+              <Favorites />
             </div>
           </div>
 
