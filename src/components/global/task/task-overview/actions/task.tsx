@@ -10,9 +10,10 @@ import Icon from "@/components/icons/icon";
 
 type Props = {
   onEdit: () => void;
+  onDelete: () => void;
 };
 
-const TaskActions = ({ onEdit }: Props) => {
+const TaskActions = ({ onEdit, onDelete }: Props) => {
   return (
     <>
       <DropdownMenuGroup>
@@ -73,6 +74,7 @@ const TaskActions = ({ onEdit }: Props) => {
           Icon={<Icon icon="Delete" />}
           label="Delete"
           color="text-red-500"
+          onClick={onDelete}
         />
       </DropdownMenuGroup>
     </>

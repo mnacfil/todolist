@@ -8,16 +8,17 @@ type Props = {
   onEdit: () => void;
   onSetDate: () => void;
   onComment: () => void;
+  onDelete: () => void;
 };
 
-const HoverActions = ({ onComment, onEdit, onSetDate }: Props) => {
+const HoverActions = ({ onComment, onEdit, onSetDate, onDelete }: Props) => {
   return (
     <>
       <Icon icon="Edit" onClick={onEdit} />
       <Icon icon="Date" onClick={onSetDate} />
       <Icon icon="Message" onClick={onComment} />
       <MoreActions>
-        <TaskActions onEdit={onEdit} />
+        <TaskActions onEdit={onEdit} onDelete={onDelete} />
       </MoreActions>
     </>
   );

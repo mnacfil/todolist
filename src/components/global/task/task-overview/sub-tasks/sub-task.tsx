@@ -9,6 +9,8 @@ import { useSubTask } from "@/hooks/task";
 import { Prisma, SubTask as SubTaskType } from "@prisma/client";
 import { useState } from "react";
 import AddTaskForm from "@/components/form/add-task";
+import HoverActions from "../../hover-actions";
+import clsx from "clsx";
 
 type Props = {
   taskId: string;
@@ -19,6 +21,15 @@ type Props = {
 const SubTask = ({ subTask, taskId, userId }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const { subTaskMutation } = useSubTask(taskId);
+  const [isHover, setIsHover] = useState(false);
+
+  const handleDelete = () => {
+    subTaskMutation.delete.mutate({
+      subTaskId: subTask.id as string,
+      taskId,
+    });
+  };
+
   return (
     <>
       {isEditing ? (
@@ -27,11 +38,18 @@ const SubTask = ({ subTask, taskId, userId }: Props) => {
           taskId={taskId}
           currentTask={subTask}
           isEditing={isEditing}
-          onCancel={() => setIsEditing(false)}
+          onCancel={() => {
+            setIsEditing(false);
+            setIsHover(false);
+          }}
           type="sub-task"
         />
       ) : (
-        <div className="w-full flex items-center justify-between">
+        <div
+          className="w-full flex items-center justify-between"
+          onMouseEnter={() => setIsHover(true)}
+          onMouseLeave={() => setIsHover(false)}
+        >
           <div className="flex gap-2 py-2">
             <Label htmlFor="subtaskCheckbox">
               <Checkbox
@@ -39,10 +57,7 @@ const SubTask = ({ subTask, taskId, userId }: Props) => {
                 className="rounded-full w-4 h-4 opacity-50 mt-[2px]"
                 onClick={(e) => {
                   e.stopPropagation();
-                  subTaskMutation.delete.mutate({
-                    subTaskId: subTask.id as string,
-                    taskId,
-                  });
+                  handleDelete();
                 }}
               />
             </Label>
@@ -53,17 +68,19 @@ const SubTask = ({ subTask, taskId, userId }: Props) => {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Edit2
-              className="text-gray-400 hover:cursor-pointer hover:bg-gray-100 hover:text-gray-950"
-              size={16}
-              onClick={() => setIsEditing(true)}
+          <div
+            className={clsx(
+              "flex items-center gap-2",
+              isHover ? "opacity-100" : "opacity-0"
+            )}
+          >
+            <HoverActions
+              key={`hover-action-${subTask.id}`}
+              onComment={() => {}}
+              onDelete={handleDelete}
+              onEdit={() => setIsEditing(true)}
+              onSetDate={() => {}}
             />
-            <Calendar className="text-gray-400" size={16} />
-            <MessageSquare className="text-gray-400" size={16} />
-            <MoreActions>
-              <TaskActions userId={userId} />
-            </MoreActions>
           </div>
         </div>
       )}

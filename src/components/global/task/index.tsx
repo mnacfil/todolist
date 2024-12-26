@@ -17,7 +17,7 @@ import { Separator } from "@radix-ui/react-separator";
 import dynamic from "next/dynamic";
 import MoreActions from "../more-actions";
 import { HeaderActions } from "./task-overview/actions";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getTaskCommentsOptions,
   getTaskSubTasksOptions,
@@ -27,6 +27,7 @@ import { useSectionTask } from "@/hooks/section";
 import HoverActions from "./hover-actions";
 import TaskInfo from "./task-info";
 import clsx from "clsx";
+import Icon from "@/components/icons/icon";
 
 export enum TaskType {
   MAIN_TASK,
@@ -51,6 +52,8 @@ const Task = ({
   place = TaskPlace.MAIN,
 }: Props) => {
   const queryClient = useQueryClient();
+  const subtasksQuery = useQuery(getTaskSubTasksOptions(task?.id as string));
+  const commentsQuery = useQuery(getTaskCommentsOptions(task?.id as string));
   const { deleteMutate } = useTask();
   const { deleteProjectTaskMutation } = useProjectTask(projectId ?? "");
   const { deleteSectionTaskMutation } = useSectionTask(
@@ -68,6 +71,29 @@ const Task = ({
 
   const onSetDate = () => {};
   const onComment = () => {};
+
+  const handleDelete = () => {
+    if (place === TaskPlace.MAIN) {
+      deleteMutate(task?.id as string);
+    }
+    if (place === TaskPlace.PROJECT) {
+      deleteProjectTaskMutation.mutate(task?.id as string);
+    }
+    if (place === TaskPlace.SECTION) {
+      deleteSectionTaskMutation.mutate({
+        id: task?.id as string,
+        sectionId: sectionId ?? "",
+      });
+    }
+  };
+
+  const handlePrefetchSubtasksAndComments = async () => {
+    await queryClient.prefetchQuery(getTaskSubTasksOptions(task.id));
+    await queryClient.prefetchQuery(getTaskCommentsOptions(task.id));
+  };
+
+  const subtasksCount = subtasksQuery.data?.subTasks?.length ?? 0;
+  const commentsCount = commentsQuery.data?.comments?.length ?? 0;
 
   return (
     <>
@@ -94,20 +120,7 @@ const Task = ({
                   <Checkbox
                     id="taskCheckbox"
                     className="rounded-full text-gray-500!"
-                    onCheckedChange={() => {
-                      if (place === TaskPlace.MAIN) {
-                        deleteMutate(task?.id as string);
-                      }
-                      if (place === TaskPlace.PROJECT) {
-                        deleteProjectTaskMutation.mutate(task?.id as string);
-                      }
-                      if (place === TaskPlace.SECTION) {
-                        deleteSectionTaskMutation.mutate({
-                          id: task?.id as string,
-                          sectionId: sectionId ?? "",
-                        });
-                      }
-                    }}
+                    onCheckedChange={handleDelete}
                     color="red"
                   />
                 </Label>
@@ -117,14 +130,7 @@ const Task = ({
                   onClick={(e) => {
                     e.stopPropagation();
                   }}
-                  onMouseEnter={async () => {
-                    await queryClient.prefetchQuery(
-                      getTaskSubTasksOptions(task.id)
-                    );
-                    await queryClient.prefetchQuery(
-                      getTaskCommentsOptions(task.id)
-                    );
-                  }}
+                  onMouseEnter={handlePrefetchSubtasksAndComments}
                 >
                   <TaskInfo task={task} onClick={() => setShowDialog(true)} />
                 </DialogTrigger>
@@ -140,12 +146,42 @@ const Task = ({
                   onComment={onComment}
                   onEdit={onEdit}
                   onSetDate={onSetDate}
+                  onDelete={handleDelete}
                 />
               </div>
             </div>
-            <div className="flex-1 flex items-center gap-1">
-              <p className="ml-auto text-xs">inbox</p>
-              <InboxIcon className="text-gray-500" size={12} />
+            <div className="flex items-center justify-between pl-6">
+              <DialogTrigger
+                asChild
+                className="cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+                onMouseEnter={handlePrefetchSubtasksAndComments}
+              >
+                <div className="flex items-center space-x-2">
+                  {subtasksCount > 0 && (
+                    <div className="flex items-center space-x-1">
+                      <Icon icon="Subtasks" />
+                      <span className="text-[11px] leading-[14px]">
+                        1/{subtasksCount}
+                      </span>
+                    </div>
+                  )}
+                  {commentsCount > 0 && (
+                    <div className="flex items-center space-x-1">
+                      <Icon icon="Message" />
+                      <span className="text-[11px] leading-[14px]">
+                        {commentsCount}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </DialogTrigger>
+              <div className="flex-1 flex items-center gap-1">
+                <p className="ml-auto text-xs">inbox</p>
+                <InboxIcon className="text-gray-500" size={12} />
+              </div>
             </div>
           </div>
           <DialogContent className="w-full flex flex-col sm:max-w-4xl p-0 min-h-[80%] max-h-[80%] gap-0">
