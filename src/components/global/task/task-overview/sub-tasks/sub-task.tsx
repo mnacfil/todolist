@@ -1,12 +1,9 @@
 "use client";
 
-import MoreActions from "@/components/global/more-actions";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Edit2, Calendar, MessageSquare } from "lucide-react";
-import { TaskActions } from "../actions";
 import { useSubTask } from "@/hooks/task";
-import { Prisma, SubTask as SubTaskType } from "@prisma/client";
+import { SubTask as SubTaskType } from "@prisma/client";
 import { useState } from "react";
 import AddTaskForm from "@/components/form/add-task";
 import HoverActions from "../../hover-actions";
@@ -27,6 +24,13 @@ const SubTask = ({ subTask, taskId, userId }: Props) => {
     subTaskMutation.delete.mutate({
       subTaskId: subTask.id as string,
       taskId,
+    });
+  };
+
+  const handleToggleCompleted = (isChecked: boolean) => {
+    subTaskMutation.toggleCompleted.mutate({
+      isCompleted: isChecked,
+      subTaskId: subTask.id as string,
     });
   };
 
@@ -55,9 +59,12 @@ const SubTask = ({ subTask, taskId, userId }: Props) => {
               <Checkbox
                 id="subtaskCheckbox"
                 className="rounded-full w-4 h-4 opacity-50 mt-[2px]"
+                checked={subTask.completed as boolean}
+                onCheckedChange={(checked) => {
+                  handleToggleCompleted(checked as boolean);
+                }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDelete();
                 }}
               />
             </Label>

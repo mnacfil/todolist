@@ -3,6 +3,7 @@ import {
   createTask,
   deleteSubTask,
   deleteTask,
+  toggleCompletedSubtask,
   updateSubTask,
   updateTask,
 } from "@/actions/task";
@@ -288,6 +289,63 @@ export const useSubTask = (taskId: string) => {
     },
   });
 
+  const toggleCompletedSubtaskResult = useMutation({
+    mutationFn: async ({
+      subTaskId,
+      isCompleted,
+    }: {
+      subTaskId: string;
+      isCompleted: boolean;
+    }) => {
+      return await toggleCompletedSubtask({ subTaskId, isCompleted });
+    },
+    onMutate: (payload) => {
+      queryClient.cancelQueries({ queryKey: appKeys.getTaskSubTasks(taskId) });
+
+      const previousSubTasks = queryClient.getQueryData(
+        appKeys.getTaskSubTasks(taskId)
+      );
+
+      queryClient.setQueryData(appKeys.getTaskSubTasks(taskId), (old: any) => ({
+        ...old,
+        ["subTasks"]: old.subTasks.map((subTask: Prisma.SubTaskCreateInput) =>
+          subTask.id === payload.subTaskId
+            ? {
+                ...subTask,
+                completed: payload.isCompleted,
+              }
+            : subTask
+        ),
+      }));
+
+      return { previousSubTasks };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(
+        appKeys.getTaskSubTasks(taskId),
+        context?.previousSubTasks
+      );
+      console.log(error);
+    },
+    onSettled: (res) => {
+      if (res?.status === 200) {
+        // show only when completed
+        if (res.data) {
+          toast("Success", {
+            description: res?.message || "Sub task successfully updated.",
+          });
+        }
+      } else {
+        toast("Error", {
+          description: res?.message || "Something went wrong.",
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getTaskSubTasks(taskId),
+      });
+    },
+  });
+
   const subTaskMutation = {
     create: {
       mutate: createSubTaskMutationResult.mutate,
@@ -300,6 +358,10 @@ export const useSubTask = (taskId: string) => {
     update: {
       mutate: updateSubtaskMutationResult.mutate,
       isPending: updateSubtaskMutationResult.isPending,
+    },
+    toggleCompleted: {
+      mutate: toggleCompletedSubtaskResult.mutate,
+      isPending: toggleCompletedSubtaskResult.isPending,
     },
   };
 

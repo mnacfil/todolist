@@ -92,8 +92,11 @@ const Task = ({
     await queryClient.prefetchQuery(getTaskCommentsOptions(task.id));
   };
 
-  const subtasksCount = subtasksQuery.data?.subTasks?.length ?? 0;
-  const commentsCount = commentsQuery.data?.comments?.length ?? 0;
+  const totalSubtasks = subtasksQuery.data?.subTasks?.length ?? 0;
+  const totalCompletedSubtasks =
+    subtasksQuery.data?.subTasks?.filter((subtask) => subtask.completed)
+      .length ?? 0;
+  const totalComments = commentsQuery.data?.comments?.length ?? 0;
 
   return (
     <>
@@ -160,19 +163,19 @@ const Task = ({
                 onMouseEnter={handlePrefetchSubtasksAndComments}
               >
                 <div className="flex items-center space-x-2">
-                  {subtasksCount > 0 && (
+                  {totalSubtasks > 0 && (
                     <div className="flex items-center space-x-1">
                       <Icon icon="Subtasks" />
                       <span className="text-[11px] leading-[14px]">
-                        1/{subtasksCount}
+                        {totalCompletedSubtasks}/{totalSubtasks}
                       </span>
                     </div>
                   )}
-                  {commentsCount > 0 && (
+                  {totalComments > 0 && (
                     <div className="flex items-center space-x-1">
                       <Icon icon="Message" />
                       <span className="text-[11px] leading-[14px]">
-                        {commentsCount}
+                        {totalComments}
                       </span>
                     </div>
                   )}

@@ -375,3 +375,42 @@ export const getTaskComments = async (taskId: string) => {
     };
   }
 };
+
+export const toggleCompletedSubtask = async ({
+  subTaskId,
+  isCompleted,
+}: {
+  subTaskId: string;
+  isCompleted: boolean;
+}) => {
+  if (!subTaskId) {
+    return {
+      status: 400,
+      data: null,
+      message: "Invalid id or taskId",
+    };
+  }
+
+  try {
+    const updatedSubtask = await prisma.subTask.update({
+      where: {
+        id: subTaskId,
+      },
+      data: {
+        completed: isCompleted,
+      },
+    });
+
+    return {
+      status: 200,
+      data: updatedSubtask.completed,
+      message: "1 task completed.",
+    };
+  } catch (error) {
+    return {
+      status: 400,
+      data: null,
+      message: "Sub task cannot be updated at this time.",
+    };
+  }
+};

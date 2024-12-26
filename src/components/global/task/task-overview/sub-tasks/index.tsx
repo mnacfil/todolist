@@ -23,26 +23,49 @@ const SubTasks = ({ task, userId }: Props) => {
     return <div>Loading...</div>;
   }
 
+  const totalSubtasks = data?.subTasks?.length ?? 0;
+  const totalCompletedSubtasks =
+    data?.subTasks?.filter((subtask) => subtask.completed).length ?? 0;
+
   return (
     <div className="flex flex-col gap-4 w-full">
       {data?.subTasks && data.subTasks?.length > 0 ? (
         <HideAndShow
           label="Sub tasks"
-          subLabel={`${0}/${data.subTasks.length}`}
+          subLabel={`${totalCompletedSubtasks}/${totalSubtasks}`}
         >
           <div className="divide-y flex flex-col">
-            {data.subTasks.map((subTask) => (
-              <div key={subTask.id}>
-                <SubTask
-                  userId={userId}
-                  taskId={task.id as string}
-                  subTask={subTask}
-                />
-              </div>
-            ))}
-            <Separator className="mb-2" />
+            {data.subTasks
+              .filter((item) => !item.completed)
+              .map((subTask) => (
+                <div key={subTask.id}>
+                  <SubTask
+                    userId={userId}
+                    taskId={task.id as string}
+                    subTask={subTask}
+                  />
+                </div>
+              ))}
+            <div className="py-2.5">
+              <ToggleAddTask
+                userId={userId}
+                taskId={task?.id}
+                type={"sub-task"}
+              />
+            </div>
+            {data.subTasks
+              .filter((item) => item.completed)
+              .map((subTask) => (
+                <div key={subTask.id}>
+                  <SubTask
+                    userId={userId}
+                    taskId={task.id as string}
+                    subTask={subTask}
+                  />
+                </div>
+              ))}
           </div>
-          <ToggleAddTask userId={userId} taskId={task?.id} type={"sub-task"} />
+          {totalCompletedSubtasks > 0 && <Separator className="mb-2" />}
         </HideAndShow>
       ) : (
         <ToggleAddTask userId={userId} taskId={task?.id} type={"sub-task"} />
