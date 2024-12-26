@@ -58,6 +58,7 @@ model SubTask {
   priority    String?
   reminder    String?
   labels      String?
+  completed   Boolean?  @default(false)
 }
 
 // Comment
