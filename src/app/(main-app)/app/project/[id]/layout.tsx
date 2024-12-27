@@ -9,7 +9,6 @@ type Props = {
   params: {
     id: string;
   };
-  searchParams: Record<string, string>;
   children: ReactNode;
 };
 

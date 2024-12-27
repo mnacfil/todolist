@@ -6,7 +6,6 @@ type Props = {
   params: {
     id: string;
   };
-  searchParams: Record<string, string>;
 };
 
 const ProjectPage = ({ params }: Props) => {
