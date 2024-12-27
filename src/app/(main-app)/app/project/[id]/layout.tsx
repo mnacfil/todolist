@@ -1,8 +1,3 @@
-import {
-  getProjectSectionsOptions,
-  getProjectTasksOptions,
-} from "@/lib/react-query/options";
-import { QueryClient } from "@tanstack/react-query";
 import React, { ReactNode } from "react";
 
 const ProjectLayout = async ({
@@ -14,11 +9,6 @@ const ProjectLayout = async ({
     id: string;
   };
 }) => {
-  const queryClient = new QueryClient();
-  const projectId = params.id.split("-").slice(-5).join("-");
-  await queryClient.prefetchQuery(getProjectTasksOptions(projectId));
-  await queryClient.prefetchQuery(getProjectSectionsOptions(projectId));
-
   const title = params.id
     .split("-")
     .slice(0, -5)
