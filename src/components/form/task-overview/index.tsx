@@ -41,7 +41,7 @@ type Props = {
 const TaskOverViewForm = ({ task, userId }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const ref = useRef<HTMLFormElement | null>(null);
-  const { isUpdating, updateMutate } = useTask(userId);
+  const { isUpdating, updateMutate } = useTask();
   const form = useForm<z.infer<typeof TaskOverviewFormSchema>>({
     resolver: zodResolver(TaskOverviewFormSchema),
     defaultValues: {

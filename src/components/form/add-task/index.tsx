@@ -92,7 +92,7 @@ const AddTaskForm = ({
   place = TaskPlace.MAIN,
 }: Props) => {
   const [taskPriority, setTaskPriority] = useState<TaskPriority>("p4");
-  const { isPending, isUpdating, mutate, updateMutate } = useTask(userId);
+  const { isPending, isUpdating, mutate, updateMutate } = useTask();
   const { createProjectTaskMutation, updateProjectTaskMutation } =
     useProjectTask(projectId ?? "");
   const { createSectionTaskMutation, updateSectionTaskMutation } =

@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-const ProjectLayout = async ({
+const ProjectLayout = ({
   params,
   children,
 }: {
