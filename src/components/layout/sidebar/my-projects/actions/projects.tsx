@@ -1,4 +1,5 @@
 import MoreActionItem from "@/components/global/more-actions/item";
+import Icon from "@/components/icons/icon";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   DropdownMenuGroup,
@@ -18,15 +19,17 @@ const ProjectsAction = ({ onAddProject, onBrowseTemplate }: Props) => {
         <Dialog>
           <DialogTrigger asChild onClick={(e) => e.stopPropagation()}>
             <MoreActionItem
-              iconName="hash"
               label="Add Project"
               description="Plan and assign tasks"
+              Icon={<Icon icon="Plus" />}
+              shortcut="Ctrl E"
+              onClick={() => {}}
             />
           </DialogTrigger>
           <DialogContent>Add Project here</DialogContent>
         </Dialog>
         <MoreActionItem
-          iconName="bookmark"
+          Icon={<Icon icon="Reminder" />}
           label="Browse templates"
           description="Get started with a project template"
         />
