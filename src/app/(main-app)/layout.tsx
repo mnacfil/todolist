@@ -13,11 +13,7 @@ import {
 } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
-type Props = {
-  children: React.ReactNode;
-};
-
-const AppLayout = async ({ children }: Props) => {
+const AppLayout = async ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();
   const user = await currentUser();
 

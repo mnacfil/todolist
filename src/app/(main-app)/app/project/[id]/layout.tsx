@@ -5,14 +5,15 @@ import {
 import { QueryClient } from "@tanstack/react-query";
 import React, { ReactNode } from "react";
 
-type Props = {
+const ProjectLayout = async ({
+  params,
+  children,
+}: {
+  children: ReactNode;
   params: {
     id: string;
   };
-  children: ReactNode;
-};
-
-const ProjectLayout = async ({ params, children }: Props) => {
+}) => {
   const queryClient = new QueryClient();
   const projectId = params.id.split("-").slice(-5).join("-");
   await queryClient.prefetchQuery(getProjectTasksOptions(projectId));
