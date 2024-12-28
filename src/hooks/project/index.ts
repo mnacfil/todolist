@@ -3,6 +3,7 @@ import {
   deleteProject,
   getProjects,
   getProjectTasks,
+  toggleFavoriteProject,
   updateProject,
 } from "@/actions/project";
 import { createTask, deleteTask, updateTask } from "@/actions/task";
@@ -153,10 +154,72 @@ export const useProject = (userId: string) => {
     },
   });
 
+  const toggleFavoriteProjectMutation = useMutation({
+    mutationFn: async ({
+      projectId,
+      isFavorite,
+    }: {
+      projectId: string;
+      isFavorite: boolean;
+    }) => {
+      return await toggleFavoriteProject({
+        projectId,
+        isFavorite,
+      });
+    },
+    onMutate: async (payload) => {
+      await queryClient.cancelQueries({
+        queryKey: appKeys.getUserProjects(userId),
+      });
+      const previouseProjects = queryClient.getQueryData(
+        appKeys.getUserProjects(userId)
+      );
+
+      queryClient.setQueryData(
+        appKeys.getUserProjects(userId),
+        (old: Awaited<ReturnType<typeof getProjects>>) => ({
+          ...old,
+          data: old.data?.map((project) =>
+            project.id === payload.projectId
+              ? {
+                  ...project,
+                  favorite: payload.isFavorite,
+                }
+              : project
+          ),
+        })
+      );
+
+      return { previouseProjects };
+    },
+    onError: (error, payload, context) => {
+      queryClient.setQueryData(
+        appKeys.getUserProjects(userId),
+        context?.previouseProjects
+      );
+      console.log(error);
+    },
+    onSettled: (response) => {
+      if (response?.status === 200) {
+        toast("Success", {
+          description: response.message ?? "Deleted project successfully",
+        });
+      } else {
+        toast("Error", {
+          description: response?.message ?? "Cannot delete project.",
+        });
+      }
+      queryClient.invalidateQueries({
+        queryKey: appKeys.getUserProjects(userId),
+      });
+    },
+  });
+
   const projectMutation = {
     create: createProjectMutation,
     remove: deleteProjectMutation,
     update: updateProjectMutation,
+    toggleFavorite: toggleFavoriteProjectMutation,
   };
 
   return { projectMutation };

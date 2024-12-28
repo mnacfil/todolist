@@ -10,9 +10,15 @@ type Props = {
   projectTitle: string;
   onEdit: () => void;
   onDelete: () => void;
+  onFavorite: () => void;
 };
 
-const ProjectAction = ({ projectTitle, onDelete, onEdit }: Props) => {
+const ProjectAction = ({
+  projectTitle,
+  onDelete,
+  onEdit,
+  onFavorite,
+}: Props) => {
   return (
     <>
       <DropdownMenuGroup>
@@ -24,6 +30,7 @@ const ProjectAction = ({ projectTitle, onDelete, onEdit }: Props) => {
         <MoreActionItem
           Icon={<Icon icon="Favorite" />}
           label="Add to favorite"
+          onClick={onFavorite}
         />
         <MoreActionItem
           Icon={<Icon icon="Duplicate" />}

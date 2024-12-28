@@ -22,7 +22,10 @@ import clsx from "clsx";
 import MyProjects from "./my-projects";
 import Icon from "@/components/icons/icon";
 import { LinksAndActions } from "./links-and-actions";
-import { Favorites } from "./favorites";
+import MyFavorites from "./favorites";
+import { useQuery } from "@tanstack/react-query";
+import { getUserProjectsOptions } from "@/lib/react-query/options";
+import { useUser } from "@clerk/nextjs";
 
 type Props = {};
 
@@ -30,6 +33,10 @@ const Sidebar = (props: Props) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
   const [windowWidth, setWindowWidth] = useState(0);
+  const { user } = useUser();
+  const { isPending, data } = useQuery(
+    getUserProjectsOptions(user?.id as string)
+  );
 
   // useEffect(() => {
   //   const onResize = () => {
@@ -90,14 +97,9 @@ const Sidebar = (props: Props) => {
           </Dialog>
           <LinksAndActions currentPathName={pathname} />
 
-          <div className="mt-5 space-y-3">
-            <p className="text-sm font-semibold text-gray-500">Favorites</p>
-            <div className="flex flex-col w-full space-y-3">
-              <Favorites />
-            </div>
-          </div>
+          <MyFavorites data={data} isPending={isPending} />
 
-          <MyProjects />
+          <MyProjects data={data} isPending={isPending} />
         </div>
       ) : (
         <div className="p-4">

@@ -163,3 +163,39 @@ export const getProjectTasks = async (projectId: string) => {
     };
   }
 };
+
+export const toggleFavoriteProject = async ({
+  isFavorite,
+  projectId,
+}: {
+  projectId: string;
+  isFavorite: boolean;
+}) => {
+  if (!projectId) {
+    return {
+      status: 400,
+      message: "Invalid project",
+    };
+  }
+  try {
+    const updatedProject = await prisma.project.update({
+      where: {
+        id: projectId,
+      },
+      data: {
+        favorite: isFavorite,
+      },
+    });
+    return {
+      status: 200,
+      data: updatedProject,
+      message: "Successfully get project tasks",
+    };
+  } catch (error) {
+    return {
+      status: 400,
+      projectTasks: [],
+      message: "Something went wrong, Please try again later.",
+    };
+  }
+};

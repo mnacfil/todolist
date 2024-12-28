@@ -97,4 +97,5 @@ model Project {
   authorId  String
   tasks     Task[]
   section   Section[]
+  favorite  Boolean?  @default(false)
 }

@@ -8,6 +8,7 @@ import ProjectAction from "./actions/project-action";
 import MoreActions from "@/components/global/more-actions";
 import { useProject } from "@/hooks/project";
 import { useRouter } from "next/navigation";
+import Icon from "@/components/icons/icon";
 
 export type ProjectWithRelation = Project & {
   _count: {
@@ -15,11 +16,17 @@ export type ProjectWithRelation = Project & {
   };
 };
 
+export enum ProjectPlace {
+  My_Projects,
+  Favorites,
+}
+
 type Props = {
   data: ProjectWithRelation;
   isActive: boolean;
   href: string;
   userId: string;
+  place?: ProjectPlace;
   onEditCallback: () => void;
 };
 
@@ -28,6 +35,7 @@ const ProjectLink = ({
   isActive,
   href,
   userId,
+  place = ProjectPlace.My_Projects,
   onEditCallback,
 }: Props) => {
   const [isHover, setIsHover] = useState(false);
@@ -46,8 +54,9 @@ const ProjectLink = ({
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >
-      <div className="flex items-center space-x-2">
-        <p className={clsx("text-primary text-sm", isActive && "text-red-800")}>
+      <div className="flex items-center space-x-1">
+        <Icon icon="Hash" />
+        <p className={clsx("text-primary text-xs", isActive && "text-red-800")}>
           {data.title}
         </p>
       </div>
@@ -68,6 +77,12 @@ const ProjectLink = ({
             }}
             onEdit={() => {
               onEditCallback();
+            }}
+            onFavorite={() => {
+              projectMutation.toggleFavorite.mutate({
+                isFavorite: place === ProjectPlace.My_Projects,
+                projectId: data.id,
+              });
             }}
           />
         </MoreActions>
