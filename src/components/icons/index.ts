@@ -34,3 +34,4 @@ export { Edit } from "./edit";
 export { Google } from "./google";
 export { Subtasks } from "./subtasks";
 export { UnFavorite } from "./un-favorite";
+export { OpenClosedPanel } from "./panel-open-close";

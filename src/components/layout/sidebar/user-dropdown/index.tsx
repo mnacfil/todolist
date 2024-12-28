@@ -40,7 +40,10 @@ export const UserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="hover:bg-gray-100 space-x-2  p-1.5">
+        <Button
+          variant="ghost"
+          className="hover:bg-gray-100 space-x-2  p-1.5 ring-0 outline-none border-0"
+        >
           <Avatar className="w-6 h-6">
             <AvatarImage
               src={user?.imageUrl ?? "https://github.com/shadcn.png"}
