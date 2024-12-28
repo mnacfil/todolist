@@ -47,7 +47,7 @@ const ProjectLink = ({
       key={data.id}
       href={href}
       className={clsx(
-        `flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm relative`,
+        `flex items-center justify-between p-1.5 hover:bg-gray-100/50 rounded-sm relative`,
         isActive ? "bg-orange-400/10 hover:bg-orange-400/10" : "bg-none"
       )}
       prefetch={true}
@@ -69,7 +69,7 @@ const ProjectLink = ({
         <MoreActions onClick={() => setIsHover(true)}>
           <ProjectAction
             key={href}
-            projectTitle={data.title}
+            data={data}
             onDelete={() => {
               projectMutation.remove.mutate(data.id);
               // not working

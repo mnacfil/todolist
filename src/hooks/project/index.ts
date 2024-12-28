@@ -202,7 +202,7 @@ export const useProject = (userId: string) => {
     onSettled: (response) => {
       if (response?.status === 200) {
         toast("Success", {
-          description: response.message ?? "Deleted project successfully",
+          description: response.message ?? "Project added to Favorites",
         });
       } else {
         toast("Error", {

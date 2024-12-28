@@ -10,21 +10,10 @@ import {
 import { CirclePlus, PanelRight, Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { UserDropdown } from "./user-dropdown";
-import {
-  favoriteLinks,
-  projectsLinks,
-  sidebarLinks,
-} from "@/components/constants/sidebar";
-import Link from "next/link";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { usePathname } from "next/navigation";
-import clsx from "clsx";
-import MyProjects from "./my-projects";
-import Icon from "@/components/icons/icon";
+import Projects from "./my-projects";
 import { LinksAndActions } from "./links-and-actions";
-import MyFavorites from "./favorites";
-import { useQuery } from "@tanstack/react-query";
-import { getUserProjectsOptions } from "@/lib/react-query/options";
 import { useUser } from "@clerk/nextjs";
 
 type Props = {};
@@ -34,9 +23,6 @@ const Sidebar = (props: Props) => {
   const [open, setOpen] = useState(true);
   const [windowWidth, setWindowWidth] = useState(0);
   const { user } = useUser();
-  const { isPending, data } = useQuery(
-    getUserProjectsOptions(user?.id as string)
-  );
 
   // useEffect(() => {
   //   const onResize = () => {
@@ -97,9 +83,7 @@ const Sidebar = (props: Props) => {
           </Dialog>
           <LinksAndActions currentPathName={pathname} />
 
-          <MyFavorites data={data} isPending={isPending} />
-
-          <MyProjects data={data} isPending={isPending} />
+          <Projects />
         </div>
       ) : (
         <div className="p-4">

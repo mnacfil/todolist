@@ -189,7 +189,11 @@ export const toggleFavoriteProject = async ({
     return {
       status: 200,
       data: updatedProject,
-      message: "Successfully get project tasks",
+      message: `${updatedProject.title} ${
+        updatedProject.favorite
+          ? "project added to your favorites."
+          : "project remove from your favorites."
+      }`,
     };
   } catch (error) {
     return {

@@ -5,20 +5,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Alert from "@/components/global/alert";
 import Icon from "@/components/icons/icon";
+import { ProjectWithRelation } from "../project-link";
 
 type Props = {
-  projectTitle: string;
+  data: ProjectWithRelation;
   onEdit: () => void;
   onDelete: () => void;
   onFavorite: () => void;
 };
 
-const ProjectAction = ({
-  projectTitle,
-  onDelete,
-  onEdit,
-  onFavorite,
-}: Props) => {
+const ProjectAction = ({ data, onDelete, onEdit, onFavorite }: Props) => {
   return (
     <>
       <DropdownMenuGroup>
@@ -27,11 +23,19 @@ const ProjectAction = ({
           label="Edit"
           onClick={onEdit}
         />
-        <MoreActionItem
-          Icon={<Icon icon="Favorite" />}
-          label="Add to favorite"
-          onClick={onFavorite}
-        />
+        {data.favorite ? (
+          <MoreActionItem
+            Icon={<Icon icon="UnFavorite" />}
+            label="Remove from favorites"
+            onClick={onFavorite}
+          />
+        ) : (
+          <MoreActionItem
+            Icon={<Icon icon="Delete" />}
+            label="add to favorites"
+            onClick={onFavorite}
+          />
+        )}
         <MoreActionItem
           Icon={<Icon icon="Duplicate" />}
           color="red"
@@ -44,7 +48,7 @@ const ProjectAction = ({
           title="Delete project?"
           description={
             <p className="text-gray-700">
-              The <strong className="text-gray-800">{projectTitle}</strong>{" "}
+              The <strong className="text-gray-800">{data.title}</strong>{" "}
               project and all of its tasks will be permanently deleted.
             </p>
           }
@@ -57,7 +61,7 @@ const ProjectAction = ({
               onClick={onDelete}
             />
           }
-          key={"project-action" + "-" + projectTitle}
+          key={"project-action" + "-" + data.title}
         />
       </DropdownMenuGroup>
     </>
