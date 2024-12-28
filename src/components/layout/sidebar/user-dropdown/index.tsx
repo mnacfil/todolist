@@ -40,14 +40,14 @@ export const UserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="hover:bg-gray-100 space-x-2">
-          <Avatar>
+        <Button variant="ghost" className="hover:bg-gray-100 space-x-2  p-1.5">
+          <Avatar className="w-6 h-6">
             <AvatarImage
               src={user?.imageUrl ?? "https://github.com/shadcn.png"}
             />
             <AvatarFallback>MN</AvatarFallback>
           </Avatar>
-          <p>{user?.firstName + " " + user?.lastName}</p>
+          <p className="text-sm">{user?.firstName + " " + user?.lastName}</p>
           <ChevronDown className="w-4 h-4 opacity-50" />
         </Button>
       </DropdownMenuTrigger>

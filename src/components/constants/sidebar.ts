@@ -3,7 +3,7 @@ import { IconType } from "../icons/icon-type";
 export const sidebarLinks = [
   {
     icon: "Inbox" as IconType,
-    href: "/inbox",
+    href: "/app/inbox",
     title: "Inbox",
   },
   {
@@ -13,12 +13,12 @@ export const sidebarLinks = [
   },
   {
     icon: "CalendarDates" as IconType,
-    href: "/upcoming",
+    href: "/app/upcoming",
     title: "Upcoming",
   },
   {
     icon: "Grid" as IconType,
-    href: "/filters-labels",
+    href: "/app/filters-labels",
     title: "Filters & Labels",
   },
 ];

@@ -57,7 +57,7 @@ const Sidebar = (props: Props) => {
         )}
       </div>
       {open ? (
-        <div className="w-[280px] h-screen hidden sm:block bg-orange-50/50  p-4">
+        <div className="w-[260px] h-screen hidden sm:block bg-orange-50/50  p-4">
           <div className="flex items-center justify-between">
             <UserDropdown />
             <div>
@@ -67,22 +67,7 @@ const Sidebar = (props: Props) => {
               />
             </div>
           </div>
-          <Dialog>
-            <DialogTrigger>
-              <div className="flex items-center space-x-1 cursor-pointer my-3">
-                <CirclePlus className="w-6 h-6 ml-[-3px] fill-red-500 text-white" />
-                <p className="text-sm font-semibold file:text-red-800">
-                  Add task
-                </p>
-              </div>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[700px]">
-              {/* <AddTask user={user} /> */}
-              <p>Add task</p>
-            </DialogContent>
-          </Dialog>
           <LinksAndActions currentPathName={pathname} />
-
           <Projects />
         </div>
       ) : (

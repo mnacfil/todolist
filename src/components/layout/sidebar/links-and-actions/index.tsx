@@ -11,9 +11,9 @@ type Props = {
 
 export const LinksAndActions = ({ currentPathName }: Props) => {
   return (
-    <div className="w-full flex flex-col">
-      <Item title="Search" icon="Search" />
+    <div className="w-full flex flex-col mb-5 mt-2">
       <Item title="Add task" icon="Plus" />
+      <Item title="Search" icon="Search" />
       {sidebarLinks.map((link) => {
         const isActive = link.href === currentPathName;
         return (

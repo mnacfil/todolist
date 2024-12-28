@@ -30,7 +30,7 @@ const Projects = () => {
   return (
     <div className="my-5 flex flex-col gap-3">
       {/* Favorites */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Icon icon="Favorite" />
@@ -68,7 +68,7 @@ const Projects = () => {
         </div>
       </div>
       {/* My Projects */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Image

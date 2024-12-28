@@ -1,5 +1,6 @@
 import Icon from "@/components/icons/icon";
 import { IconType } from "@/components/icons/icon-type";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import clsx from "clsx";
 import Link from "next/link";
 
@@ -24,23 +25,42 @@ export const Item = ({
     return (
       <Link
         href={href}
-        className="flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm"
+        className={clsx(
+          "flex items-center justify-between p-1.5 hover:bg-gray-100/50 rounded-sm",
+          isActive && "bg-orange-400/10 hover:bg-orange-400/10"
+        )}
       >
         <div className="flex items-center space-x-2">
           <Icon icon={icon} />
-          <p className={clsx("text-primary text-sm")}>{title}</p>
+          <p
+            className={clsx("text-primary text-xs", isActive && "text-red-800")}
+          >
+            {title}
+          </p>
         </div>
-        <p className={clsx("text-muted-foreground/50 text-sm")}>{data}</p>
+        <p
+          className={clsx(
+            "text-muted-foreground/50 text-xs",
+            isActive && "text-red-800"
+          )}
+        >
+          {data}
+        </p>
       </Link>
     );
   }
+
   return (
-    <div className="flex items-center justify-between p-2 hover:bg-gray-100/50 rounded-sm">
-      <div className="flex items-center space-x-2">
-        <Icon icon={icon} />
-        <p className={clsx("text-primary text-sm")}>{title}</p>
-      </div>
-      <p className={clsx("text-muted-foreground/50 text-sm")}>{data}</p>
-    </div>
+    <Dialog>
+      <DialogTrigger>
+        <div className="flex items-center justify-between p-1.5 hover:bg-gray-100/50 rounded-sm">
+          <div className="flex items-center space-x-2">
+            <Icon icon={icon} />
+            <p className={clsx("text-primary text-xs")}>{title}</p>
+          </div>
+        </div>
+      </DialogTrigger>
+      <DialogContent>Action content</DialogContent>
+    </Dialog>
   );
 };
