@@ -33,7 +33,7 @@ export const Item = ({
         <div className="flex items-center space-x-2">
           <Icon icon={icon} />
           <p
-            className={clsx("text-primary text-xs", isActive && "text-red-800")}
+            className={clsx("text-primary text-sm", isActive && "text-red-800")}
           >
             {title}
           </p>
@@ -56,7 +56,7 @@ export const Item = ({
         <div className="flex items-center justify-between p-1.5 hover:bg-gray-100/50 rounded-sm">
           <div className="flex items-center space-x-2">
             <Icon icon={icon} />
-            <p className={clsx("text-primary text-xs")}>{title}</p>
+            <p className={clsx("text-primary text-sm")}>{title}</p>
           </div>
         </div>
       </DialogTrigger>

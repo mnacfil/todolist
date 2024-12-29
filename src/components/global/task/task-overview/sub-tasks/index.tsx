@@ -31,7 +31,7 @@ const SubTasks = ({ task, userId }: Props) => {
     <div className="flex flex-col gap-4 w-full">
       {data?.subTasks && data.subTasks?.length > 0 ? (
         <HideAndShow
-          label="Sub tasks"
+          label="Sub-tasks"
           subLabel={`${totalCompletedSubtasks}/${totalSubtasks}`}
         >
           <div className="divide-y flex flex-col">

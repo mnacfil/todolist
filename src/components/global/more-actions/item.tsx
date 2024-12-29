@@ -30,10 +30,12 @@ const MoreActionItem = ({
       }}
       className={`${color} flex flex-col w-full gap-1 items-start cursor-pointer`}
     >
-      <div className="flex gap-1">
+      <div className="flex gap-1 items-center justify-between w-full">
         {Icon}
-        <span className={clsx("text-xs ", color ? color : "")}>{label}</span>
-        <DropdownMenuShortcut className="text-[10px] font-thin">
+        <span className={clsx("text-sm font-light", color ? color : "")}>
+          {label}
+        </span>
+        <DropdownMenuShortcut className="text-xs font-thin">
           {shortcut}
         </DropdownMenuShortcut>
       </div>

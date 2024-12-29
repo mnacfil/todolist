@@ -35,3 +35,5 @@ export { Google } from "./google";
 export { Subtasks } from "./subtasks";
 export { UnFavorite } from "./un-favorite";
 export { OpenClosedPanel } from "./panel-open-close";
+export { Clip } from "./clip";
+export { Mic } from "./mic";

@@ -4,19 +4,14 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { CommentSchema } from "./schema";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { File, Mic, Puzzle, Smile } from "lucide-react";
 import { useComment } from "@/hooks/comment/useComment";
 import { Comment } from "@prisma/client";
+import Icon from "@/components/icons/icon";
+import clsx from "clsx";
 
 type Props = {
   onCancel: () => void;
@@ -74,6 +69,9 @@ const CommentForm = ({
     form.reset();
   };
 
+  const isDisabled =
+    form.getValues("message").length === 0 || commentMutation.create.isPending;
+
   return (
     <Card className="p-4 mt-5 w-full">
       <Form {...form}>
@@ -95,16 +93,31 @@ const CommentForm = ({
           />
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
-              <File size={20} />
-              <Mic size={20} />
-              <Smile size={20} />
-              <Puzzle size={20} />
+              <Icon icon="Clip" />
+              <Icon icon="Mic" />
+              <Icon icon="EmojiSmile" />
+              <Icon icon="Puzzle" />
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" type="button" onClick={onCancel}>
+              <Button
+                variant="secondary"
+                type="button"
+                onClick={onCancel}
+                size={"sm"}
+              >
                 Cancel
               </Button>
-              <Button type="submit" disabled={commentMutation.create.isPending}>
+              <Button
+                type="submit"
+                disabled={isDisabled}
+                variant={"primary"}
+                size={"sm"}
+                className={clsx(
+                  "text-sm",
+                  isDisabled ? "cursor-not-allowed" : "cursor-pointer"
+                )}
+                aria-disabled={isDisabled}
+              >
                 Comment
               </Button>
             </div>

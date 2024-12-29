@@ -55,8 +55,8 @@ const ProjectLink = ({
       onMouseLeave={() => setIsHover(false)}
     >
       <div className="flex items-center space-x-1">
-        <Icon icon="Hash" />
-        <p className={clsx("text-primary text-xs", isActive && "text-red-800")}>
+        <Icon icon="Hash" color="" />
+        <p className={clsx("text-primary text-sm", isActive && "text-red-800")}>
           {data.title}
         </p>
       </div>

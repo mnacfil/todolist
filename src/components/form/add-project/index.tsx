@@ -122,10 +122,23 @@ const AddProjectForm = ({ currentData, isEditing, onCancel }: Props) => {
           )}
         />
         <div className="flex items-center gap-2 justify-end ">
-          <Button value={"ghost"} type="button" onClick={onCancel}>
+          <Button
+            variant="secondary"
+            type="button"
+            onClick={onCancel}
+            size={"sm"}
+            className="text-sm"
+          >
             Cancel
           </Button>
-          <Button type="submit">{isEditing ? "Save" : "Add"}</Button>
+          <Button
+            type="submit"
+            size={"sm"}
+            variant={"primary"}
+            className="text-sm px-6"
+          >
+            {isEditing ? "Save" : "Add"}
+          </Button>
         </div>
       </form>
     </Form>

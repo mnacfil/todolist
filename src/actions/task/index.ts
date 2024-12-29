@@ -345,7 +345,7 @@ export const getTaskComments = async (taskId: string) => {
         taskId,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: "asc",
       },
     });
     if (comments && comments.length > 0) {

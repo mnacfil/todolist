@@ -79,5 +79,6 @@
 .custom-icon path,
 .custom-icon rect {
   stroke: currentColor;
-  stroke-width: 0.2px;
+  stroke-width: 1px;
+  color: #777;
 }

@@ -37,9 +37,7 @@ const TaskOverview = ({ userId, task }: Props) => {
             </div>
           </div>
         </div>
-        <div
-          className={clsx(task?.comments?.length > 0 ? "ml-[42px]" : "ml-5")}
-        >
+        <div className="pl-11">
           <ToggleComment taskId={task?.id} userId={userId} />
         </div>
       </div>

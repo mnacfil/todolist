@@ -58,8 +58,8 @@ const HideAndShow = ({
                 )}`}
                 onClick={() => setOpen((prev) => !prev)}
               >
-                <p className="text-xs font-bold">{label} </p>
-                <span className="text-muted-foreground text-[10px]">
+                <p className="text-sm font-semibold text-slate-600">{label} </p>
+                <span className="text-muted-foreground text-xs">
                   {subLabel}
                 </span>
               </div>

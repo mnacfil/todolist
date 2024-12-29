@@ -34,7 +34,7 @@ const Projects = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Icon icon="Favorite" />
-            <p className="text-xs font-semibold text-gray-500">Favorites</p>
+            <p className="text-sm font-semibold text-gray-500">Favorites</p>
           </div>
         </div>
         <div className="flex flex-col w-full">
@@ -78,7 +78,7 @@ const Projects = () => {
               alt={`${user?.fullName} pic`}
               className="rounded-full"
             />
-            <p className="text-xs font-semibold text-gray-500">My Projects</p>
+            <p className="text-sm font-semibold text-gray-500">My Projects</p>
             <span className="text-[10px] leading-3 tracking-wide text-gray-500 p-[2px] bg-gray-100 rounded-sm font-semibold">
               USED: {data?.data?.length}/{TOTAL_PROJECTS}
             </span>

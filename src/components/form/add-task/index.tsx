@@ -390,8 +390,8 @@ const AddTaskForm = ({
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
-                    variant={"outline"}
-                    className="bg-gray-100/55 text-black text-xs"
+                    variant={"secondary"}
+                    className="text-sm"
                     onClick={onCancel}
                     size={"sm"}
                   >
@@ -415,13 +415,14 @@ const AddTaskForm = ({
               </AlertDialog>
               <Button
                 type="submit"
-                className={`bg-red-500/50 text-xs hover:bg-red-500 hover:text-white, ${clsx(
-                  {
-                    "bg-red-500": form.getValues("title").length > 0,
-                  }
-                )}`}
-                disabled={isPending || isUpdating}
+                disabled={
+                  isPending ||
+                  isUpdating ||
+                  form.getValues("title").length === 0
+                }
+                variant={"primary"}
                 size={"sm"}
+                className="text-sm"
               >
                 {isEditing ? "Save" : "Add Task"}
               </Button>

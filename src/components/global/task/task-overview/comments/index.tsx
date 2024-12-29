@@ -1,15 +1,10 @@
 "use client";
 
 import HideAndShow from "@/components/global/hide-and-show";
-import MoreActions from "@/components/global/more-actions";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Smile } from "lucide-react";
-import { CommentActions } from "../actions";
-import { Prisma } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import { getTaskCommentsOptions } from "@/lib/react-query/options";
 import Comment from "./comment";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 
 type Props = {
   taskId: string;

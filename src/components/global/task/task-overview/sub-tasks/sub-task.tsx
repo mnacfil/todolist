@@ -69,8 +69,8 @@ const SubTask = ({ subTask, taskId, userId }: Props) => {
               />
             </Label>
             <div className="flex flex-col gap-1">
-              <h4 className="text-xs">{subTask.title}</h4>
-              <p className="text-muted-foreground text-[10px]">
+              <h4 className="text-sm">{subTask.title}</h4>
+              <p className="text-muted-foreground text-xs">
                 {subTask.description}
               </p>
             </div>

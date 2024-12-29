@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import clsx from "clsx";
 import { useSection } from "@/hooks/section";
 import { Section } from "@prisma/client";
 
@@ -74,13 +73,19 @@ const SectionForm = ({ projectId, isEditing, data, onCancel }: Props) => {
         />
         <div className="flex items-center gap-2">
           <Button
-            type="submit"
-            className={`bg-red-500/50 text-xs hover:bg-red-500 hover:text-white, ${clsx(
-              {
-                "bg-red-500": (form.getValues("name") ?? "").length > 0,
-              }
-            )}`}
+            type="button"
             size={"sm"}
+            variant={"secondary"}
+            className="text-sm"
+            onClick={onCancel}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            className={`text-sm`}
+            size={"sm"}
+            variant="primary"
             disabled={
               form.getValues("name")?.length === 0 ||
               update.isPending ||
@@ -92,16 +97,7 @@ const SectionForm = ({ projectId, isEditing, data, onCancel }: Props) => {
               create.isPending
             }
           >
-            {isEditing ? "Save" : "Add section"}
-          </Button>
-          <Button
-            type="submit"
-            className={`text-xs`}
-            size={"sm"}
-            variant="ghost"
-            onClick={onCancel}
-          >
-            Cancel
+            Add section
           </Button>
         </div>
       </form>
