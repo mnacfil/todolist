@@ -202,10 +202,7 @@ const Task = ({
               </div>
             </DialogHeader>
             <Separator className="h-[1px] bg-gray-200" />
-            <div className="flex flex-row flex-1">
-              <TaskOverview userId={userId} task={task} />
-              <div className="bg-orange-100/50 min-w-[300px] h-auto">Side</div>
-            </div>
+            <TaskOverview userId={userId} task={task} />
           </DialogContent>
         </Dialog>
       )}
