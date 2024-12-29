@@ -12,6 +12,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu";
+import { formatDate } from "@/lib/utils";
+import { Task } from "@prisma/client";
 import {
   User,
   CreditCard,
@@ -31,13 +33,15 @@ import {
 } from "lucide-react";
 import React from "react";
 
-type Props = {};
+type Props = {
+  task: Task;
+};
 
-const HeaderActions = (props: Props) => {
+const HeaderActions = ({ task }: Props) => {
   return (
     <>
       <DropdownMenuLabel className="text-xs text-primary">
-        Added on 10 Nov . 12:25
+        Added on {formatDate(task.createdAt)}
       </DropdownMenuLabel>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>

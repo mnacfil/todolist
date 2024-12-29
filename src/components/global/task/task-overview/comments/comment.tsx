@@ -8,6 +8,7 @@ import CommentForm from "@/components/form/comment";
 import { useComment } from "@/hooks/comment/useComment";
 import clsx from "clsx";
 import ProfileAvatar from "@/components/global/avatar";
+import { formatDate } from "@/lib/utils";
 
 type Props = {
   taskId: string;
@@ -50,7 +51,7 @@ const Comment = ({ comment, taskId, user }: Props) => {
                   {user.fullName ?? "Guest user"}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {new Date(comment?.createdAt).toLocaleString()}
+                  {formatDate(new Date(comment?.createdAt))}
                 </p>
               </div>
               <div

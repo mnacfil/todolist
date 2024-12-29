@@ -196,7 +196,7 @@ const Task = ({
                 </div>
                 <div className="mr-10">
                   <MoreActions>
-                    <HeaderActions />
+                    <HeaderActions task={task} />
                   </MoreActions>
                 </div>
               </div>

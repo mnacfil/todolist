@@ -30,7 +30,7 @@ const AppLayout = async ({ children }: { children: React.ReactNode }) => {
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main className="h-screen w-full flex">
         <Sidebar />
-        <ScrollArea className="mx-auto container 2xl:px-14 ">
+        <ScrollArea className="mx-auto container 2xl:px-14 py-10">
           {children}
         </ScrollArea>
       </main>

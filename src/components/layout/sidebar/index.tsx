@@ -49,7 +49,9 @@ const Sidebar = (props: Props) => {
           <Projects />
         </div>
       ) : (
-        <Icon icon="OpenClosedPanel" onClick={() => setOpen(true)} />
+        <div className="pt-5 pl-5">
+          <Icon icon="OpenClosedPanel" onClick={() => setOpen(true)} />
+        </div>
       )}
     </div>
   );
