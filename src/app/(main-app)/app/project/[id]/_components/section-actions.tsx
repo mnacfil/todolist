@@ -68,11 +68,12 @@ const SectionActions = ({
             </p>
           }
           trigger={
-            <MoreActionItem
-              Icon={<Icon icon="Delete" />}
-              label="Delete"
-              // onClick={onCopyLink}
-            />
+            <div className="relative flex gap-2 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 cursor-pointer hover:bg-slate-100">
+              <div className="flex gap-1 items-center ">
+                <Icon icon="Delete" />
+                Delete
+              </div>
+            </div>
           }
           onCancel={() => {}}
           onDelete={onDelete}

@@ -73,7 +73,7 @@ const ProjectLink = ({
             onDelete={() => {
               projectMutation.remove.mutate(data.id);
               // not working
-              router.push("app/inbox");
+              // router.push("app/inbox");
             }}
             onEdit={() => {
               onEditCallback();

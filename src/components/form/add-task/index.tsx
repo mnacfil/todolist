@@ -256,7 +256,7 @@ const AddTaskForm = ({
                   <Input
                     placeholder="Task name"
                     {...field}
-                    className="border-none outline-none ring-offset-transparent focus:outline-none focus:border-none focus-visible:ring-offset-0 focus-visible:ring-transparent focus-visible:ring-0 font-semibold placeholder:text-gray-400 py-0 text-gray-700 text-xs"
+                    className="border-none outline-none ring-offset-transparent focus:outline-none focus:border-none focus-visible:ring-offset-0 focus-visible:ring-transparent focus-visible:ring-0 font-semibold placeholder:text-gray-400 py-0 text-gray-700 text-sm"
                   />
                 </FormControl>
                 <FormMessage className="px-3" />
