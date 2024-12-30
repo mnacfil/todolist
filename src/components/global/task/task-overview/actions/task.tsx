@@ -7,13 +7,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import MoreActionItem from "@/components/global/more-actions/item";
 import Icon from "@/components/icons/icon";
+import Alert from "@/components/global/alert";
 
 type Props = {
+  title: string;
   onEdit: () => void;
   onDelete: () => void;
 };
 
-const TaskActions = ({ onEdit, onDelete }: Props) => {
+const TaskActions = ({ title, onEdit, onDelete }: Props) => {
   return (
     <>
       <DropdownMenuGroup>
@@ -70,11 +72,24 @@ const TaskActions = ({ onEdit, onDelete }: Props) => {
       </DropdownMenuGroup>
       <DropdownMenuSeparator />
       <DropdownMenuGroup>
-        <MoreActionItem
-          Icon={<Icon icon="Delete" />}
-          label="Delete"
-          color="text-red-500"
-          onClick={onDelete}
+        <Alert
+          title="Delete section?"
+          description={
+            <p className="text-gray-700">
+              The <strong className="text-gray-800">{title}</strong> task will
+              be permanently deleted.
+            </p>
+          }
+          trigger={
+            <div className="relative flex gap-2 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 cursor-pointer hover:bg-slate-100">
+              <div className="flex gap-1 items-center ">
+                <Icon icon="Delete" />
+                Delete
+              </div>
+            </div>
+          }
+          onCancel={() => {}}
+          onDelete={onDelete}
         />
       </DropdownMenuGroup>
     </>

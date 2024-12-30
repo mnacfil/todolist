@@ -9,7 +9,8 @@ const ProjectLayout = ({
     id: string;
   };
 }) => {
-  const title = params.id
+  const decodedIdURI = decodeURIComponent(params.id);
+  const title = decodedIdURI
     .split("-")
     .slice(0, -5)
     .map((w) => w[0].toUpperCase() + w.substring(1))

@@ -83,6 +83,7 @@ const SubTask = ({ subTask, taskId, userId }: Props) => {
           >
             <HoverActions
               key={`hover-action-${subTask.id}`}
+              title={subTask.title}
               onComment={() => {}}
               onDelete={handleDelete}
               onEdit={() => setIsEditing(true)}

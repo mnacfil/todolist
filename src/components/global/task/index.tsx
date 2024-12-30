@@ -146,6 +146,7 @@ const Task = ({
               >
                 <HoverActions
                   key={task.id}
+                  title={task.title}
                   onComment={onComment}
                   onEdit={onEdit}
                   onSetDate={onSetDate}
