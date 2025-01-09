@@ -60,7 +60,7 @@ export const Item = ({
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent>Action content</DialogContent>
+      <DialogContent>{title} content here</DialogContent>
     </Dialog>
   );
 };
