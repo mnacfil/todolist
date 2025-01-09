@@ -69,7 +69,9 @@ const TaskOverview = ({ userId, task }: Props) => {
             <h5 className="text-sm text-slate-600">Priority</h5>
             <div className="flex items-center gap-2">
               <Icon icon="Flag" />
-              <span className="text-xs text-slate-900">P4</span>
+              <span className="text-xs text-slate-900">
+                {task?.priority.toUpperCase()}
+              </span>
             </div>
           </div>
           <Separator />

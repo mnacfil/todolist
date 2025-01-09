@@ -10,6 +10,7 @@ import {
 import { appKeys } from "@/lib/react-query/keys";
 import { Prisma } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export const useTask = () => {
@@ -367,5 +368,28 @@ export const useSubTask = (taskId: string) => {
 
   return {
     subTaskMutation,
+  };
+};
+
+type TaskPriority = "p1" | "p2" | "p3" | "p4";
+type OtherTaskInfo = {
+  dueDate?: string;
+  reminder?: string;
+  priority?: TaskPriority;
+};
+
+export const useOtheTaskInfo = () => {
+  const [otherTaskInfo, setOtherTaskInfo] = useState<OtherTaskInfo>();
+
+  const handleOtherTaskInfo = (key: keyof OtherTaskInfo, value: string) => {
+    setOtherTaskInfo((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  return {
+    otherTaskInfo,
+    handleOtherTaskInfo,
   };
 };

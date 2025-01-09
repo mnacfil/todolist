@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "sonner";
-import { useSubTask, useTask } from "@/hooks/task";
+import { useOtheTaskInfo, useSubTask, useTask } from "@/hooks/task";
 import { AddTaskFormSchema } from "./schema";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -93,6 +93,7 @@ const AddTaskForm = ({
 }: Props) => {
   const [taskPriority, setTaskPriority] = useState<TaskPriority>("p4");
   const { isPending, isUpdating, mutate, updateMutate } = useTask();
+  const { handleOtherTaskInfo, otherTaskInfo } = useOtheTaskInfo();
   const { createProjectTaskMutation, updateProjectTaskMutation } =
     useProjectTask(projectId ?? "");
   const { createSectionTaskMutation, updateSectionTaskMutation } =
@@ -110,14 +111,19 @@ const AddTaskForm = ({
       priority: "",
     },
   });
+
   const onSubmit = async (values: z.infer<typeof AddTaskFormSchema>) => {
+    const finalValues = {
+      ...values,
+      title: values.title.substring(3),
+    };
     try {
       if (type === "sub-task") {
         if (isEditing) {
           subTaskMutation.update.mutate({
             subTaskId: currentTask?.id as string,
             data: {
-              ...values,
+              ...finalValues,
               author: {
                 connect: {
                   clerkId: userId,
@@ -132,7 +138,7 @@ const AddTaskForm = ({
           });
         } else {
           subTaskMutation.create.mutate({
-            ...values,
+            ...finalValues,
             author: {
               connect: {
                 clerkId: userId,
@@ -152,14 +158,17 @@ const AddTaskForm = ({
             if (place === TaskPlace.MAIN) {
               updateMutate({
                 id: currentTask?.id,
-                data: { ...values, author: { connect: { clerkId: userId } } },
+                data: {
+                  ...finalValues,
+                  author: { connect: { clerkId: userId } },
+                },
               });
             }
             if (place === TaskPlace.PROJECT && projectId) {
               updateProjectTaskMutation.mutate({
                 id: currentTask?.id,
                 data: {
-                  ...values,
+                  ...finalValues,
                   author: {
                     connect: { clerkId: userId },
                   },
@@ -172,7 +181,7 @@ const AddTaskForm = ({
             if (place === TaskPlace.SECTION && sectionId) {
               updateSectionTaskMutation.mutate({
                 data: {
-                  ...values,
+                  ...finalValues,
                   author: {
                     connect: { clerkId: userId },
                   },
@@ -190,7 +199,7 @@ const AddTaskForm = ({
         } else {
           if (place === TaskPlace.PROJECT && projectId) {
             createProjectTaskMutation.mutate({
-              ...values,
+              ...finalValues,
               author: {
                 connect: {
                   clerkId: userId,
@@ -207,7 +216,7 @@ const AddTaskForm = ({
             createSectionTaskMutation.mutate({
               sectionId,
               data: {
-                ...values,
+                ...finalValues,
                 author: {
                   connect: {
                     clerkId: userId,
@@ -223,7 +232,7 @@ const AddTaskForm = ({
           }
           if (place === TaskPlace.MAIN) {
             mutate({
-              ...values,
+              ...finalValues,
               author: {
                 connect: {
                   clerkId: userId,
@@ -244,7 +253,7 @@ const AddTaskForm = ({
   };
 
   return (
-    <Card className="mt-5">
+    <Card className="mt-5 rounded-2xl">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="">
           <FormField
@@ -256,7 +265,7 @@ const AddTaskForm = ({
                   <Input
                     placeholder="Task name"
                     {...field}
-                    className="border-none outline-none ring-offset-transparent focus:outline-none focus:border-none focus-visible:ring-offset-0 focus-visible:ring-transparent focus-visible:ring-0 font-semibold placeholder:text-gray-400 py-0 text-gray-700 text-sm"
+                    className="border-none outline-none ring-offset-transparent focus:outline-none focus:border-none focus-visible:ring-offset-0 focus-visible:ring-transparent focus-visible:ring-0 font-semibold placeholder:text-gray-400 py-0 text-gray-700 text-sm rounded-2xl"
                   />
                 </FormControl>
                 <FormMessage className="px-3" />
@@ -285,13 +294,19 @@ const AddTaskForm = ({
           <div className="flex gap-2 items-center m-3">
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <Button
                     variant={"outline"}
-                    className="bg-white text-gray-900 border border-gray-300"
+                    className="bg-white border border-gray-300 text-slate-500 font-light  flex items-center gap-1"
+                    type="button"
+                    onClick={() => {
+                      handleOtherTaskInfo(
+                        "dueDate",
+                        new Date().getDate().toString()
+                      );
+                    }}
                   >
-                    <CalendarIcon className="w-3 h-3 mr-1 opacity-50" /> Due
-                    date
+                    <CalendarIcon className="w-3 h-3 opacity-50" /> Due date
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>More actions</TooltipContent>
@@ -304,11 +319,24 @@ const AddTaskForm = ({
                 <FormItem>
                   <TooltipProvider>
                     <Tooltip>
-                      <Select onValueChange={field.onChange}>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          console.log(value);
+                          handleOtherTaskInfo("priority", value);
+                          form.setValue(
+                            "title",
+                            `${value} ${form.getValues("title")}`
+                          );
+                        }}
+                      >
                         <FormControl>
                           <TooltipTrigger asChild>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select priority" />
+                              <SelectValue
+                                placeholder="Select priority"
+                                className=""
+                              />
                             </SelectTrigger>
                           </TooltipTrigger>
                         </FormControl>
@@ -330,10 +358,10 @@ const AddTaskForm = ({
                         <SelectContent>
                           {priorities.map((priority) => (
                             <SelectItem
-                              value={priority.value}
+                              value={priority.label}
                               key={priority.label}
                             >
-                              <div className="flex gap-1 items-center">
+                              <div className="flex gap-1 items-center text-slate-500 font-light">
                                 <FlagIcon
                                   color={priority.color}
                                   className="h-4 w-4 opacity-50"
@@ -354,7 +382,7 @@ const AddTaskForm = ({
                 <TooltipTrigger asChild>
                   <Button
                     variant={"outline"}
-                    className="bg-white text-gray-900 border border-gray-300"
+                    className="bg-white text-slate-500 font-light border border-gray-300 flex items-center gap-1"
                     size={"sm"}
                   >
                     <Clock className="w-4 h-4 opacity-50" /> Reminders
