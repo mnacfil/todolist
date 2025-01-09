@@ -59,6 +59,7 @@ import { priorities } from "@/components/constants";
 import { Card } from "@/components/ui/card";
 import { useProjectTask } from "@/hooks/project";
 import { useSectionTask } from "@/hooks/section";
+import { isStartsWithPriorityLabel } from "@/lib/utils";
 
 export enum TaskPlace {
   MAIN = "main",
@@ -252,6 +253,13 @@ const AddTaskForm = ({
     }
   };
 
+  const handlePriorityChange = (value: TaskPriority) => {
+    handleOtherTaskInfo("priority", value);
+    const title = form.getValues("title");
+    const hasLabel = isStartsWithPriorityLabel(title);
+    form.setValue("title", `${value} ${hasLabel ? title.substring(3) : title}`);
+  };
+
   return (
     <Card className="mt-5 rounded-2xl">
       <Form {...form}>
@@ -322,12 +330,7 @@ const AddTaskForm = ({
                       <Select
                         onValueChange={(value) => {
                           field.onChange(value);
-                          console.log(value);
-                          handleOtherTaskInfo("priority", value);
-                          form.setValue(
-                            "title",
-                            `${value} ${form.getValues("title")}`
-                          );
+                          handlePriorityChange(value as TaskPriority);
                         }}
                       >
                         <FormControl>

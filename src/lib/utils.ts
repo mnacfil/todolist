@@ -1,3 +1,4 @@
+import { priorities } from "@/components/constants";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -32,4 +33,9 @@ export const formatDate = (date: Date) => {
   return `${calendarDate} ${month} ${hour}:${
     minutes >= 10 ? minutes : `0${minutes}`
   } ${meridiem}`;
+};
+
+export const isStartsWithPriorityLabel = (title: string) => {
+  const priorityLabels = priorities.map((priority) => priority.label);
+  return priorityLabels.some((label) => title.startsWith(label));
 };
