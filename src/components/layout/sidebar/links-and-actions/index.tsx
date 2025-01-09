@@ -4,6 +4,7 @@ import { sidebarLinks } from "@/components/constants/sidebar";
 import clsx from "clsx";
 import Link from "next/link";
 import { Item } from "./item";
+import AddTaskForm from "@/components/form/add-task";
 
 type Props = {
   currentPathName: string;
@@ -12,7 +13,7 @@ type Props = {
 export const LinksAndActions = ({ currentPathName }: Props) => {
   return (
     <div className="w-full flex flex-col mb-5 mt-2">
-      <Item title="Add task" icon="Plus" />
+      <Item title="Add task" icon="Plus" children={<AddTaskForm userId=""/>}/>
       <Item title="Search" icon="Search" />
       {sidebarLinks.map((link) => {
         const isActive = link.href === currentPathName;

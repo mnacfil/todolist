@@ -1,12 +1,15 @@
+import VisualHidden from "@/components/global/visual-hidden";
 import Icon from "@/components/icons/icon";
 import { IconType } from "@/components/icons/icon-type";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle} from "@/components/ui/dialog";
 import clsx from "clsx";
 import Link from "next/link";
+import { ReactNode } from "react";
 
 type Props = {
   icon: IconType;
   title: string;
+  children?: ReactNode;
   data?: number;
   type?: "link" | "action";
   href?: string;
@@ -17,9 +20,10 @@ export const Item = ({
   data,
   icon,
   isActive,
-  title,
+  children,
   type = "action",
   href,
+  title
 }: Props) => {
   if (type === "link" && href) {
     return (
@@ -60,7 +64,12 @@ export const Item = ({
           </div>
         </div>
       </DialogTrigger>
-      <DialogContent>{title} content here</DialogContent>
+      <DialogContent className="p-0 m-0">
+        <VisualHidden>
+
+        <DialogTitle>{title}</DialogTitle>
+        </VisualHidden>
+        {children}</DialogContent>
     </Dialog>
   );
 };

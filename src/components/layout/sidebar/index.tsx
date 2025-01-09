@@ -1,20 +1,10 @@
 "use client";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { CirclePlus, PanelRight, Search } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { UserDropdown } from "./user-dropdown";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { usePathname } from "next/navigation";
 import Projects from "./my-projects";
 import { LinksAndActions } from "./links-and-actions";
-import { useUser } from "@clerk/nextjs";
 import clsx from "clsx";
 import MobileSidebar from "./mobile-sidebar";
 import Icon from "@/components/icons/icon";
@@ -24,8 +14,6 @@ type Props = {};
 const Sidebar = (props: Props) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(true);
-  const [windowWidth, setWindowWidth] = useState(0);
-  const { user } = useUser();
 
   return (
     <div className="h-screen">
