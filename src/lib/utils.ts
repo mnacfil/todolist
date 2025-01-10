@@ -39,3 +39,12 @@ export const isStartsWithPriorityLabel = (title: string) => {
   const priorityLabels = priorities.map((priority) => priority.label);
   return priorityLabels.some((label) => title.startsWith(label));
 };
+
+// format "12/29/2024, 10:09:10 PM" to 29 Dec
+export const formatDueDate = (date: Date) => {
+  const calendarDate = date.getDate();
+  const month = months[date.getMonth().toString()];
+  const year = date.getFullYear();
+  const yearNow = new Date(Date.now()).getFullYear();
+  return `${calendarDate} ${month} ${year === yearNow ? "" : year}`;
+};

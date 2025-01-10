@@ -59,7 +59,14 @@ import { priorities } from "@/components/constants";
 import { Card } from "@/components/ui/card";
 import { useProjectTask } from "@/hooks/project";
 import { useSectionTask } from "@/hooks/section";
-import { isStartsWithPriorityLabel } from "@/lib/utils";
+import { cn, formatDueDate, isStartsWithPriorityLabel } from "@/lib/utils";
+import DatePicker from "@/components/global/date-picker";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 export enum TaskPlace {
   MAIN = "main",
@@ -110,6 +117,7 @@ const AddTaskForm = ({
           : ""
         : "",
       priority: "",
+      dueDate: undefined,
     },
   });
 
@@ -260,6 +268,11 @@ const AddTaskForm = ({
     form.setValue("title", `${value} ${hasLabel ? title.substring(3) : title}`);
   };
 
+  const handleDueDateChange = (date: Date) => {
+    handleOtherTaskInfo("dueDate", date.toString());
+    // form.setValue("dueDate", `${formatDueDate(date)}`);
+  };
+
   return (
     <Card className="mt-5 rounded-2xl">
       <Form {...form}>
@@ -300,26 +313,83 @@ const AddTaskForm = ({
           />
 
           <div className="flex gap-2 items-center m-3">
-            <TooltipProvider>
+            <FormField
+              control={form.control}
+              name="dueDate"
+              render={({ field }) => (
+                <FormItem>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                formatDueDate(field.value)
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          align="start"
+                          className="flex w-auto flex-col space-y-2 p-2"
+                        >
+                          <Select
+                            onValueChange={(value) => {
+                              console.log(value);
+                              const selectedDate = new Date(
+                                Date.now() + Number(value) * 24 * 60 * 60 * 1000
+                              );
+                              field.onChange(selectedDate);
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select more here" />
+                            </SelectTrigger>
+                            <SelectContent position="popper">
+                              <SelectItem value="0">Today</SelectItem>
+                              <SelectItem value="1">Tomorrow</SelectItem>
+                              <SelectItem value="3">In 3 days</SelectItem>
+                              <SelectItem value="7">In a week</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <div className="rounded-md border">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              disabled={(date) =>
+                                date < new Date(Date.now() - Date.now()) ||
+                                date < new Date("1900-01-01")
+                              }
+                              initialFocus
+                            />
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                      <TooltipContent>Set due date</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </FormItem>
+              )}
+            />
+            {/* <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className="bg-white border border-gray-300 text-slate-500 font-light  flex items-center gap-1"
-                    type="button"
-                    onClick={() => {
-                      handleOtherTaskInfo(
-                        "dueDate",
-                        new Date().getDate().toString()
-                      );
-                    }}
-                  >
-                    <CalendarIcon className="w-3 h-3 opacity-50" /> Due date
-                  </Button>
+                  <DatePicker onSetDateCallback={handleDueDateChange} />
                 </TooltipTrigger>
-                <TooltipContent>More actions</TooltipContent>
+                <TooltipContent>Set due date</TooltipContent>
               </Tooltip>
-            </TooltipProvider>
+            </TooltipProvider> */}
             <FormField
               control={form.control}
               name="priority"
