@@ -10,6 +10,7 @@ import Comments from "./comments";
 import ToggleComment from "./toggle-comment";
 import Icon from "@/components/icons/icon";
 import { Separator } from "@/components/ui/separator";
+import { formatDueDate } from "@/lib/utils";
 
 type Props = {
   userId: string;
@@ -59,10 +60,14 @@ const TaskOverview = ({ userId, task }: Props) => {
           <Separator />
           <div className="flex flex-col py-3 gap-2">
             <h5 className="text-sm text-slate-600">Due date</h5>
-            <div className="flex items-center gap-2">
-              <Icon icon="Date" />
-              <span className="text-xs text-slate-900">Today</span>
-            </div>
+            {task?.dueDate && (
+              <div className="flex items-center gap-2">
+                <Icon icon="Date" />
+                <span className="text-xs text-slate-900">
+                  {formatDueDate(task?.dueDate)}
+                </span>
+              </div>
+            )}
           </div>
           <Separator />
           <div className="flex flex-col py-3 gap-2">
